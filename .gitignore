@@ -1,4 +1,3 @@
 /.user.ini
 /.vscode
-.gitignore
 /shared/database_config.php
