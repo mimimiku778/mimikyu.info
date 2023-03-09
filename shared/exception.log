@@ -1,0 +1,25 @@
+2023-03-10 01:13:50 Asia/Tokyo: LogicException: : #0 /home/mimikyu/mimikyu.info/public_html/controllers/pages/IndexPageController.php(7): include()
+#1 /home/mimikyu/mimikyu.info/public_html/core/Route.php(196): IndexPageController->index()
+#2 /home/mimikyu/mimikyu.info/public_html/core/Route.php(69): Route::runControllerMethod()
+#3 /home/mimikyu/mimikyu.info/public_html/index.php(23): Route::run()
+#4 {main}: 180.28.52.35
+2023-03-10 01:13:52 Asia/Tokyo: LogicException: : #0 /home/mimikyu/mimikyu.info/public_html/controllers/pages/IndexPageController.php(7): include()
+#1 /home/mimikyu/mimikyu.info/public_html/core/Route.php(196): IndexPageController->index()
+#2 /home/mimikyu/mimikyu.info/public_html/core/Route.php(69): Route::runControllerMethod()
+#3 /home/mimikyu/mimikyu.info/public_html/index.php(23): Route::run()
+#4 {main}: 180.28.52.35
+2023-03-10 01:15:15 Asia/Tokyo: LogicException: : #0 /home/mimikyu/mimikyu.info/public_html/controllers/pages/IndexPageController.php(7): include()
+#1 /home/mimikyu/mimikyu.info/public_html/core/Route.php(196): IndexPageController->index()
+#2 /home/mimikyu/mimikyu.info/public_html/core/Route.php(69): Route::runControllerMethod()
+#3 /home/mimikyu/mimikyu.info/public_html/index.php(23): Route::run()
+#4 {main}: 180.28.52.35
+2023-03-10 01:15:15 Asia/Tokyo: LogicException: : #0 /home/mimikyu/mimikyu.info/public_html/controllers/pages/IndexPageController.php(7): include()
+#1 /home/mimikyu/mimikyu.info/public_html/core/Route.php(196): IndexPageController->index()
+#2 /home/mimikyu/mimikyu.info/public_html/core/Route.php(69): Route::runControllerMethod()
+#3 /home/mimikyu/mimikyu.info/public_html/index.php(23): Route::run()
+#4 {main}: 180.28.52.35
+2023-03-10 01:21:17 Asia/Tokyo: LogicException: : #0 /home/mimikyu/mimikyu.info/public_html/controllers/pages/IndexPageController.php(7): include()
+#1 /home/mimikyu/mimikyu.info/public_html/core/Route.php(196): IndexPageController->index()
+#2 /home/mimikyu/mimikyu.info/public_html/core/Route.php(69): Route::runControllerMethod()
+#3 /home/mimikyu/mimikyu.info/public_html/index.php(23): Route::run()
+#4 {main}: 180.28.52.35

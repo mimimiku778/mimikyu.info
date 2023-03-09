@@ -1,0 +1,23 @@
+RewriteEngine On
+
+# Redirect all non-www and non-https requests to https://mimikyu.info
+RewriteCond %{HTTPS} off [OR]
+RewriteCond %{HTTP_HOST} ^www\.mimikyu\.info [NC]
+RewriteRule ^(.*)$ https://mimikyu.info/$1 [L,R=301]
+
+# Redirect /index to / using a single rule
+RewriteRule ^(.*)/index/?$  https://mimikyu.info/$1 [R=301,L]
+RewriteRule ^index/?$ https://mimikyu.info [R=301,L]
+
+# If the request is not for a file or directory, route it to index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ /index.php/$1 [L]
+
+# Prevent access to specific directories
+RewriteRule ^config - [R=404,L]
+RewriteRule ^lib - [R=404,L]
+RewriteRule ^controllers - [R=404,L]
+RewriteRule ^core - [R=404,L]
+RewriteRule ^models - [R=404,L]
+RewriteRule ^views - [R=404,L]
