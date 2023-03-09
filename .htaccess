@@ -9,6 +9,10 @@ RewriteRule ^(.*)$ https://mimikyu.info/$1 [L,R=301]
 RewriteRule ^(.*)/index/?$  https://mimikyu.info/$1 [R=301,L]
 RewriteRule ^index/?$ https://mimikyu.info [R=301,L]
 
+# Redirect URLs ending in a trailing slash to the same URL without the trailing slash
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)/$ /$1 [L,R=301]
+
 # If the request is not for a file or directory, route it to index.php
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
