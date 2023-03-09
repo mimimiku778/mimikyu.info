@@ -9,7 +9,6 @@
   <meta name="description" content="わたしの個人的なWEB開発のポートフォリオとソースコードを公開しているので、ぜひチェックしてみてくださいね！メインはJavaScriptとPHPでがんばっています♪ 細かいところまでこだわっているので、ぜひ見てみてください！" />
   <link rel="stylesheet" href="/../assets/simple.css">
   <link rel="icon" type="image/png" href="/../assets/favicon.png">
-
 </head>
 
 <body>
