@@ -15,8 +15,7 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ /index.php/$1 [L]
 
 # Prevent access to specific directories
-RewriteRule ^config - [R=404,L]
-RewriteRule ^lib - [R=404,L]
+RewriteRule ^shared - [R=404,L]
 RewriteRule ^controllers - [R=404,L]
 RewriteRule ^core - [R=404,L]
 RewriteRule ^models - [R=404,L]

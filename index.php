@@ -12,5 +12,5 @@ require_once __DIR__ . '/shared/exceptions.php';
 require_once __DIR__ . '/core/SimpleAutoloader.php';
 require_once __DIR__ . '/core/ExceptionHandler.php';
 require_once __DIR__ . '/core/Route.php';
-//
+
 Route::run();

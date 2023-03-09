@@ -10,7 +10,6 @@
   <link rel="stylesheet" href="/../assets/simple.css">
   <link rel="icon" type="image/png" href="/../assets/favicon.png">
 
-
 </head>
 
 <body>
