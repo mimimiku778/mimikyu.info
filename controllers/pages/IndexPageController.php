@@ -4,6 +4,8 @@ class IndexPageController extends AbstractPageController
 {
     public function index()
     {
-        include __DIR__ . '/../../views/indexView.php';
+        View::render('header');
+        View::render('toppage');
+        View::render('footer');
     }
 }
