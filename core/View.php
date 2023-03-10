@@ -74,7 +74,11 @@ class View
     {
         foreach ($array as $key => $value) {
             if (is_array($value)) {
-                $array[$key] = self::sanitizeArray($value);
+                if (substr($key, 0, 2) !== '__') {
+                    $array[$key] = self::sanitizeArray($value);
+                } else {
+                    $array[$key] = $value;
+                }
             } else {
                 if (substr($key, 0, 2) !== '__') {
                     $array[$key] = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
