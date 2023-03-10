@@ -187,8 +187,13 @@ class Route
         require_once $controllerFilePath;
         $controller = new $controllerClassName();
 
-        // Return 404 error if method does not exist
+        // Return 404 error if method does not exist or private
         if (!method_exists($controller, $methodName)) {
+            throw new NotFoundException;
+        }
+
+        $reflectionMethod = new ReflectionMethod($controllerClassName, $methodName);
+        if (!$reflectionMethod->isPublic()) {
             throw new NotFoundException;
         }
 

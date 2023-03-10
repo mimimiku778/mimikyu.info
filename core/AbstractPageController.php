@@ -9,5 +9,5 @@ abstract class AbstractPageController
         register_shutdown_function(fn () => View::display());
     }
 
-    abstract public function index();
+    abstract protected function index();
 }

@@ -10,23 +10,23 @@ require_once __DIR__ . '/../shared/database_config.php';
  * @author mimimiku778 <0203.sub@gmail.com>
  * @license https://github.com/mimimiku778/MimimalCMS/blob/master/LICENSE.md
  */
-class SqlConnect
+class DB
 {
-    public PDO $pdo;
+    public static ?PDO $pdo = null;
 
     /**
      * @throws PDOException
      */
-    public function __construct()
+    public static function connect()
     {
-        $this->pdo = new PDO(
+        self::$pdo = new PDO(
             'mysql:host=' . DatabaseConfig::HOST . ';dbname=' . DatabaseConfig::DB_NAME . ';charset=utf8mb4',
             DatabaseConfig::USER_NAME,
             DatabaseConfig::PASSWORD
         );
 
-        // Enable PDO to throw exceptions on error
-        $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        // Enable PDO to throw exceptions on error.
+        self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 
     /**
@@ -44,9 +44,13 @@ class SqlConnect
      * @throws PDOException If an error occurs during the query execution.
      * @throws InvalidArgumentException If any of the array values are not strings or numbers.
      */
-    public function execute(string $query, ?array $params = null): PDOStatement
+    public static function execute(string $query, ?array $params = null): PDOStatement
     {
-        $stmt = $this->pdo->prepare($query);
+        if (self::$pdo === null) {
+            self::connect();
+        }
+
+        $stmt = self::$pdo->prepare($query);
 
         if ($params === null) {
             $stmt->execute();
@@ -83,9 +87,13 @@ class SqlConnect
      * @throws PDOException If an error occurs during the query execution.
      * @throws InvalidArgumentException If any of the array values are not strings or numbers.
      */
-    public function fetch(string $query, ?array $params = null): array|false
+    public static function fetch(string $query, ?array $params = null): array|false
     {
-        return $this->execute($query, $params)->fetch(PDO::FETCH_ASSOC);
+        if (self::$pdo === null) {
+            self::connect();
+        }
+
+        return self::execute($query, $params)->fetch(PDO::FETCH_ASSOC);
     }
 
     /**
@@ -103,9 +111,13 @@ class SqlConnect
      * @throws PDOException If an error occurs during the query execution.
      * @throws InvalidArgumentException If any of the array values are not strings or numbers.
      */
-    public function fetchAll(string $query, ?array $params = null): array
+    public static function fetchAll(string $query, ?array $params = null): array
     {
-        return $this->execute($query, $params)->fetchAll(PDO::FETCH_ASSOC);
+        if (self::$pdo === null) {
+            self::connect();
+        }
+
+        return self::execute($query, $params)->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
@@ -123,10 +135,14 @@ class SqlConnect
      * @throws PDOException If an error occurs during the query execution.
      * @throws InvalidArgumentException If any of the array values are not strings or numbers.
      */
-    public function executeAndGetLastInsertId(string $query, ?array $params = null): int
+    public static function executeAndGetLastInsertId(string $query, ?array $params = null): int
     {
-        $this->execute($query, $params);
-        return (int) $this->pdo->lastInsertId();
+        if (self::$pdo === null) {
+            self::connect();
+        }
+
+        self::execute($query, $params);
+        return (int) self::$pdo->lastInsertId();
     }
 
     /**
@@ -152,13 +168,17 @@ class SqlConnect
      * @throws LogicException If any of the given callbacks are invalid.
      * @throws InvalidArgumentException If any of the parameter values are invalid or the given callbacks are invalid.
      */
-    public function executeLikeSearchQuery(
+    public static function executeLikeSearchQuery(
         callable $query,
         callable $whereClauseQuery,
         string $keyword,
         ?array $params = null
     ): array {
-        $convertedKeyword = $this->escapeLike(
+        if (self::$pdo === null) {
+            self::connect();
+        }
+
+        $convertedKeyword = self::escapeLike(
             preg_replace('/　/u', ' ', mb_convert_encoding($keyword, 'UTF-8', 'auto'))
         );
 
@@ -189,7 +209,7 @@ class SqlConnect
             throw new LogicException('Query callback must return a string');
         }
 
-        $stmt = $this->pdo->prepare($queryResult);
+        $stmt = self::$pdo->prepare($queryResult);
 
         if (!preg_match('{:\w+}', $whereClause, $matches)) {
             throw new InvalidArgumentException('Invalid placeholder for WHERE clause.');
@@ -228,7 +248,7 @@ class SqlConnect
      * @param string $char The escape character to use (defaults to backslash).
      * @return string The escaped string.
      */
-    public function escapeLike(string $value, string $char = '\\'): string
+    public static function escapeLike(string $value, string $char = '\\'): string
     {
         $search  = [$char, '%', '_'];
         $replace = [$char . $char, $char . '%', $char . '_'];
@@ -259,12 +279,16 @@ class SqlConnect
      * @throws LogicException If any of the given callbacks are invalid.
      * @throws InvalidArgumentException If the search keyword is empty or the WHERE clause query has an invalid placeholder.
      */
-    public function executeFulltextSearchQuery(
+    public static function executeFulltextSearchQuery(
         callable $query,
         string $whereClauseQuery,
         string $keyword,
         ?array $params = null
     ): array {
+        if (self::$pdo === null) {
+            self::connect();
+        }
+
         $convertedKeyword = preg_replace('/　/u', ' ', mb_convert_encoding($keyword, 'UTF-8', 'auto'));
 
         if (empty(trim($convertedKeyword))) {
@@ -296,6 +320,6 @@ class SqlConnect
             throw new LogicException('Query callback must return a string');
         }
 
-        return $this->fetchAll($queryResult, $params);
+        return self::fetchAll($queryResult, $params);
     }
 }
