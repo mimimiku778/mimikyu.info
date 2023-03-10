@@ -355,7 +355,7 @@ input:disabled {
     background: var(--color-bg-secondary);
     border-color: var(--color-bg-secondary);
     color: var(--color-text-secondary);
-    cursor: not-allowed;
+    cursor: default;
 }
 
 button[disabled]:hover,

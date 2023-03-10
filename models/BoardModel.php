@@ -8,7 +8,7 @@ class BoardModel
      */
     public function get(array $value): array
     {
-        return DB::fetchAll('SELECT * FROM board LIMIT :offset, :limit', $value);
+        return DB::fetchAll('SELECT id, time, text FROM board LIMIT :offset, :limit', $value);
     }
 
     /**
@@ -17,6 +17,6 @@ class BoardModel
      */
     public function write(array $value): int
     {
-        return DB::execute('INSERT INTO board (text, user) VALUES (:text, :user)')->rowCount();
+        return DB::execute('INSERT INTO board (text, user) VALUES (:text, :user)', $value)->rowCount();
     }
 }

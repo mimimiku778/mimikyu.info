@@ -1,21 +1,25 @@
 /**
+ * @author mimimiku778 <0203.sub@gmail.com>
+ * @license https://github.com/mimimiku778/MimimalCMS/blob/master/LICENSE.md
+ */
+
+/**
  * Shorthand function for document.querySelector, which returns the first matching element within the document.
  *
- * @function $qS
+ * @function qS
  * @param {string} selector - The selector to use for finding the element.
  * @returns {Element|null} - The first matching element, or null if none is found.
  */
-const $qS = document.querySelector.bind(document)
-
+const qS = document.querySelector.bind(document)
 
 /**
  * Shorthand function for document.querySelectorAll, which returns a NodeList of all matching elements within the document.
  *
- * @function $qSA
+ * @function qSA
  * @param {string} selector - The selector to use for finding the elements.
  * @returns {NodeList} - A NodeList of all matching elements.
  */
-const $qSA = document.querySelectorAll.bind(document)
+const qSA = document.querySelectorAll.bind(document)
 
 /**
  * Finds an element by its ID.
@@ -32,6 +36,18 @@ const byId = id => document.getElementById(id)
  * @param {Function} callback - The function to execute when the element is clicked.
  */
 const addClick = (element, callback) => element && element.addEventListener('click', callback)
+
+/**
+ * Enables/disables a button based on the input field value.
+ * 
+ * @param {HTMLInputElement} input - The input field element.
+ * @param {HTMLButtonElement} button - The button element to enable/disable.
+ */
+const toggleButtonByInputValue = (input, button) => {
+  input.addEventListener('input', () => {
+    button.disabled = input.value.trim() === '';
+  });
+};
 
 /**
  * Sends a POST request to the specified URL with form data.

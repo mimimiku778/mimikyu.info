@@ -1,3 +1,9 @@
+<style>
+    body {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+</style>
 <section>
     <header>
         <h1>ひとこと掲示板</h1>
@@ -7,10 +13,14 @@
                 ソースコードはこちらGithub</a>
         </p>
     </header>
-    <form action="/board" method="POST">
+    <form action="/board/post" method="POST">
         <label for="hitokoto">なにかひとこと:</label>
-        <input id="hitokoto" type="text" maxlength="100" />
-        <button type="submit">送信</button>
+        <input name="text" id="hitokoto" type="text" maxlength="100" />
+
+        <!-- CSRFトークンをセットする -->
+        <?php csrfField() ?>
+
+        <button id="submit" type="submit" disabled>送信</button>
         <?php if ($isPosted) : ?>
             <sup>投稿しました！</sup>
         <?php endif ?>
@@ -21,9 +31,13 @@
     <?php foreach ($posts as $post) : ?>
         <article>
             <aside>
-                <small><?php echo $post['id'] ?>. 2022/12/11(金) 12:01:32</small>
+                <small><?php echo $post['id'] ?>. <?php echo $post['time'] ?></small>
                 <p><?php echo $post['text'] ?></p>
             </aside>
         </article>
     <?php endforeach ?>
 </section>
+<script src="/js/functions.js"></script>
+<script>
+    toggleButtonByInputValue(byId('hitokoto'), byId('submit'))
+</script>
