@@ -6,7 +6,7 @@ class BoardPageController extends AbstractPageController
     private BoardModel $model;
 
     /**
-     *  https://mimikyu.info/board
+     * https://mimikyu.info/board
      */
     public function index()
     {
@@ -90,7 +90,7 @@ class BoardPageController extends AbstractPageController
     }
 
     /**
-     *  前のページ・次のページボタンの値を取得
+     * 前のページ・次のページボタンの値を取得
      */
     private function pagenation(int $recordCount): array
     {
@@ -122,7 +122,7 @@ class BoardPageController extends AbstractPageController
     }
 
     /**
-     *  ページネーションのselect要素を生成
+     * ページネーションのselect要素を生成
      */
     private function selectPagenation(int $recordCount, int $max, int $num, callable $url): array
     {
