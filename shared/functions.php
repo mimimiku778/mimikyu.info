@@ -6,13 +6,13 @@ declare(strict_types=1);
  * Returns HTTP status code and response in JSON format and exits.
  *
  * @param array $data The array to be returned as response.
- * @param ?int $response_code [optional] HTTP status code
+ * @param ?int $responseCode [optional] HTTP status code
  * @param bool $exit [optional] Whether to exit after sending the response. Default is true.
  */
-function jsonResponse(array $data, ?int $response_code = null, bool $exit = true)
+function jsonResponse(array $data, ?int $responseCode = null, bool $exit = true)
 {
-    if (!is_null($response_code)) {
-        http_response_code($response_code);
+    if (!is_null($responseCode)) {
+        http_response_code($responseCode);
     }
 
     header("Content-Type: application/json; charset=utf-8");
@@ -117,15 +117,15 @@ function redirect(string $url, int $responseCode = 301)
  * 
  * @param array $array The array to be validated
  * @param string $key The key to be validated
- * @param int|null $max_length The maximum length of the string (optional)
- * @param string|null $exact_match The string for exact matching (optional)
+ * @param int|null $maxLength The maximum length of the string (optional)
+ * @param string|null $exactMatch The string for exact matching (optional)
  * @return bool The result of validation
  */
 function validateKeyStr(
     array $array,
     string $key,
-    ?int $max_length = null,
-    ?string $exact_match = null
+    ?int $maxLength = null,
+    ?string $exactMatch = null
 ): bool {
     $input = $array[$key] ?? null;
     if (!is_string($input)) {
@@ -139,11 +139,11 @@ function validateKeyStr(
         return false;
     }
 
-    if (!is_null($exact_match)) {
-        return $string === $exact_match;
+    if (!is_null($exactMatch)) {
+        return $string === $exactMatch;
     }
 
-    if (!is_null($max_length) && mb_strlen($string) > $max_length) {
+    if (!is_null($maxLength) && mb_strlen($string) > $maxLength) {
         return false;
     }
 
@@ -152,37 +152,52 @@ function validateKeyStr(
 
 /**
  * Validate whether the specified key exists in the array and meets the specified numeric conditions.
- * 
+ *
  * @param array $array The array to be validated
  * @param string $key The key to be validated
- * @param int|null $max_value The maximum numeric value (optional)
- * @param int|null $min_value The minimum numeric value (optional)
- * @param int|null $exact_match The numeric value for exact match (optional)
- * @return bool The result of validation
+ * @param int|null $maxValue The maximum numeric value (optional)
+ * @param int|null $minValue The minimum numeric value (optional)
+ * @param int|null $exactMatch The numeric value for exact match (optional)
+ * @param Exception|null $e An optional Exception to be thrown if validation fails
+ * @return bool Whether the validation passed or not
+ * @throws Exception If the validation fails and an Exception was provided
  */
 function validateKeyNum(
     array $array,
     string $key,
-    ?int $max_value = null,
-    ?int $min_value = null,
-    ?int $exact_match = null
+    ?int $maxValue = null,
+    ?int $minValue = null,
+    ?int $exactMatch = null,
+    ?Exception $e = null
 ): bool {
     $input = $array[$key] ?? null;
     if (!ctype_digit($input)) {
+        if ($e !== null) {
+            throw $e;
+        }
         return false;
     }
 
     $number = (int) $input;
 
-    if (!is_null($exact_match) && $number !== $exact_match) {
+    if (!is_null($exactMatch) && $number !== $exactMatch) {
+        if ($e !== null) {
+            throw $e;
+        }
         return false;
     }
 
-    if (!is_null($min_value) && $number < $min_value) {
+    if (!is_null($minValue) && $number < $minValue) {
+        if ($e !== null) {
+            throw $e;
+        }
         return false;
     }
 
-    if (!is_null($max_value) && $number > $max_value) {
+    if (!is_null($maxValue) && $number > $maxValue) {
+        if ($e !== null) {
+            throw $e;
+        }
         return false;
     }
 
