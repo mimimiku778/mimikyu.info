@@ -30,6 +30,10 @@ class ExceptionHandler
             self::badRequest();
         }
 
+        if ($exception instanceof DataIntegrityViolationException) {
+            self::badRequest();
+        }
+
         self::errorLog($exception);
     }
 
