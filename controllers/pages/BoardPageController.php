@@ -3,6 +3,8 @@
 class BoardPageController extends AbstractPageController
 {
     private const NUMBER_ITEMS = 20;
+    private const PAGE_URL = 'https://mimikyu.info/board';
+
     private BoardModel $model;
 
     /**
@@ -22,8 +24,15 @@ class BoardPageController extends AbstractPageController
         // レコード数を取得する
         $recordCount = $this->model->getRecordCount();
 
-        // ページネーションの要素を取得する
+        // ページネーションの値を取得する
         $__pager = $this->pagenation($recordCount);
+
+        // リクエストのページ番号が最大ページ数を超える場合はリダイレクト
+        if ($__pager['num'] > $__pager['max']) {
+            redirect(self::PAGE_URL);
+        }
+
+        // ページネーションの要素を取得する
         $__selectPager = $this->selectPagenation($recordCount, ...$__pager);
 
         // 投稿を何件目から取得するか計算する
@@ -67,7 +76,7 @@ class BoardPageController extends AbstractPageController
         $_SESSION['validPost'] = true;
 
         // 掲示板にリダイレクトする
-        redirect('/board');
+        redirect(self::PAGE_URL);
     }
 
     /**
@@ -90,7 +99,7 @@ class BoardPageController extends AbstractPageController
     }
 
     /**
-     * 前のページ・次のページボタンの値を取得
+     * ページネーションの値を取得
      */
     private function pagenation(int $recordCount): array
     {
@@ -100,12 +109,7 @@ class BoardPageController extends AbstractPageController
         // リクエストのページ番号を取得
         $num = 1;
         if (validateKeyNum($_GET, 'page')) {
-            if ($_GET['page'] > $max) {
-                // ページ番号が最大数を超える場合はリダイレクト
-                redirect('/board');
-            } else {
-                $num = (int) $_GET['page'];
-            }
+            $num = (int) $_GET['page'];
         }
 
         // ページ番号のURLを生成するコールバック関数
@@ -115,7 +119,7 @@ class BoardPageController extends AbstractPageController
                 $num = '';
             }
 
-            return "https://mimikyu.info/board/{$num}";
+            return self::PAGE_URL . "/{$num}";
         };
 
         return compact('max', 'num', 'url');
