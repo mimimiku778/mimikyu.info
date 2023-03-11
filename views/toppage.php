@@ -2,7 +2,7 @@
     <nav>
         <a href="https://mimikyu.info">💻📱mimikyu.info</a>
         <ul>
-            <li></li>
+            <li><a href="https://mimikyu.info/board">ひとこと掲示板</a></li>
         </ul>
     </nav>
     <h1>ふわふわポートフォリオ😵</h1>

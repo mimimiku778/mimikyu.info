@@ -64,7 +64,7 @@ function csrfField()
  *
  * @return bool Returns `true` if the CSRF token in the request matches the token in the session; otherwise, returns `false`.
  */
-function VerifyCsrfToken(): bool
+function verifyCsrfToken(): bool
 {
     // Check if the CSRF token is set in the session.
     if (!isset($_SESSION['_csrf'])) {

@@ -1,17 +1,26 @@
 <main>
     <section>
         <header>
+            <a href="https://mimikyu.info/">mimikyu.info</a>
             <h1>ひとこと掲示板</h1>
             <p>データベースの読み書きとページネーションのテスト</p>
+            <p>よかったら書いてください😊</p>
             <br>
+            <b>ソースコードはこちら</b>
             <p><a href="https://github.com/mimimiku778/mimikyu.info/blob/master/controllers/pages/BoardPageController.php">
-                    ソースコードはこちらGithub</a>
+                    コントローラー Github</a>
+            </p>
+            <p><a href="https://github.com/mimimiku778/mimikyu.info/blob/master/models/BoardModel.php">
+                    データベースのモデル Github</a>
+            </p>
+            <p><a href="https://github.com/mimimiku778/mimikyu.info/blob/master/views/board/board.php">
+                    ビュー Github</a>
             </p>
         </header>
 
         <!-- 送信フォーム -->
         <form action="/board" method="POST">
-            <label for="hitokoto">なにかひとこと:</label>
+            <label for="hitokoto"><h2>なにかひとこと:</h2></label>
             <input name="text" id="hitokoto" type="text" maxlength="100" />
 
             <!-- CSRFトークンをセットする -->

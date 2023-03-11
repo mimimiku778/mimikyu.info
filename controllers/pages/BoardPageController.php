@@ -26,8 +26,11 @@ class BoardPageController extends AbstractPageController
         $__pager = $this->pagenation($recordCount);
         $__selectPager = $this->selectPagenation($recordCount, ...$__pager);
 
+        // 投稿を何件目から取得するか計算する
+        $offset = $__pager['num'] === 1 ? 0 : self::NUMBER_ITEMS * ($__pager['num'] - 1);
+
         // 投稿リストを取得する
-        $posts = $this->model->get(['offset' => 0, 'limit' => self::NUMBER_ITEMS]);
+        $posts = $this->model->get(['offset' => $offset, 'limit' => self::NUMBER_ITEMS]);
 
         // 日付の形式を変換する
         foreach ($posts as &$post) {
@@ -79,7 +82,7 @@ class BoardPageController extends AbstractPageController
     private function validatePost()
     {
         // 有効なCSRFトークンが送られてきているか
-        if (!VerifyCsrfToken()) {
+        if (!verifyCsrfToken()) {
             throw new ValidationException();
         }
 
@@ -104,7 +107,7 @@ class BoardPageController extends AbstractPageController
                 // ページ番号が最大数を超える場合はリダイレクト
                 redirect('/board');
             } else {
-                $num = $_GET['page'];
+                $num = (int) $_GET['page'];
             }
         }
 
