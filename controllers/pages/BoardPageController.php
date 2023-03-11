@@ -80,12 +80,12 @@ class BoardPageController extends AbstractPageController
     {
         // 有効なCSRFトークンが送られてきているか
         if (!verifyCsrfToken()) {
-            throw new ValidationException();
+            throw new ValidationException('無効なCSRFトークン');
         }
 
         // 送られてきたデータが有効であるか
         if (!validateKeyStr($_POST, 'text', 100)) {
-            throw new InvalidInputException();
+            throw new InvalidInputException('無効な文字列');
         }
     }
 
