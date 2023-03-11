@@ -15,12 +15,6 @@ body {
     margin: 0 auto;
 }
 
-.no-highlight {
-    user-select: none;
-    -webkit-user-select: none;
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-}
-
 .search-pager {
     display: flex;
     margin: auto;
@@ -44,6 +38,7 @@ body {
     font-size: 14px;
     margin: .25rem;
     text-decoration: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 .button01.prev a {
@@ -82,17 +77,24 @@ body {
 
 .button01.prev a:hover {
     filter: none;
-    background-color: var(--transparent-secondary);
+    background-color: var(--secondary);
 }
 
 .button01 a:focus {
+    transition: 0.3ms;
     box-shadow: 0 0 0 3px var(--tertiary);
     background-color: var(--transparent-secondary);
 }
 
 .button01.prev a:focus {
+    transition: 0.3ms;
     box-shadow: 0 0 0 0px rgba(0, 0, 0, 0);
-    background-color: var(--transparent-secondary);
+    background-color: var(--secondary);
+}
+
+.button01 a:active {
+    transition: 0.3ms;
+    background-color: var(--secondary);
 }
 
 .button01label {
@@ -117,6 +119,7 @@ body {
     border-radius: var(--border-radius);
     background-color: var(--transparent-secondary);
     box-shadow: var(--box-shadow) var(--color-shadow);
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 .pager-select form {
@@ -128,6 +131,12 @@ body {
     min-width: var(--width-card);
     padding: 0;
     text-align: var(--justify-normal);
+    transition: 0.3ms;
+}
+
+.pager-select:active {
+    transition: 0.3ms;
+    background-color: var(--secondary);
 }
 
 .pager-select:hover {

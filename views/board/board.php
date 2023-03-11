@@ -41,7 +41,7 @@
     <!-- select要素ページネーション -->
     <?php if ($__pager['max'] > 1) : ?>
         <section>
-            <div class="pager-select">
+            <div class="pager-select" ontouchstart>
                 <form>
                     <select id="selectPager">
                         <?php echo $__selectPager[0] ?>
@@ -68,7 +68,7 @@
     <?php if ($__pager['max'] > 1) : ?>
         <nav class="search-pager">
             <?php if ($__pager['num'] > 1) : ?>
-                <div class="button01 prev">
+                <div class="button01 prev" ontouchstart>
                     <a href="<?php echo $__pager['url']($__pager['num'] - 1) ?>"><?php echo $__pager['num'] - 1 ?>ページへ</a>
                 </div>
             <?php endif ?>
@@ -76,7 +76,7 @@
             <span class="button01label"><?php echo $__pager['num'] . ' / ' . $__pager['max'] ?></span>
 
             <?php if ($__pager['num'] < $__pager['max']) : ?>
-                <div class="button01 next">
+                <div class="button01 next" ontouchstart>
                     <a href="<?php echo $__pager['url']($__pager['num'] + 1) ?>">次のページへ</a>
                 </div>
             <?php endif ?>
