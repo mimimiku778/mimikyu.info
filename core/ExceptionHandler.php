@@ -24,12 +24,10 @@ class ExceptionHandler
 
         if ($exception instanceof ValidationException) {
             self::badRequest();
-            return;
         }
 
         if ($exception instanceof InvalidInputException) {
             self::badRequest();
-            return;
         }
 
         self::errorLog($exception);
