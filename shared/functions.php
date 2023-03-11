@@ -115,20 +115,32 @@ function redirect(string $url, int $responseCode = 301)
 /**
  * Validate whether the specified key exists in the array and meets the specified string conditions.
  * 
- * @param array $array The array to be validated
- * @param string $key The key to be validated
- * @param int|null $maxLength The maximum length of the string (optional)
- * @param string|null $exactMatch The string for exact matching (optional)
- * @return bool The result of validation
+ * @param array $array The array to be validated.
+ * @param string $key The key to be validated.
+ * @param int|null $maxLength [optional] The maximum length of the string.
+ * @param string|null $exactMatch [optional] The string for exact matching.
+ * @param string|null $e [optional] An Exception name to be thrown if validation fails.
+ * @return bool Whether the validation passed or not.
+ * @throws Exception If the specified key exists in the array but its value is invalid, 
+ *      and an Exception was provided, it will be thrown.
  */
 function validateKeyStr(
     array $array,
     string $key,
     ?int $maxLength = null,
-    ?string $exactMatch = null
+    ?string $exactMatch = null,
+    ?string $e = null
 ): bool {
-    $input = $array[$key] ?? null;
+    if (!isset($array[$key])) {
+        return false;
+    }
+
+    $input = $array[$key];
+
     if (!is_string($input)) {
+        if ($e !== null) {
+            throw new $e;
+        }
         return false;
     }
 
@@ -136,14 +148,28 @@ function validateKeyStr(
     $string = preg_replace('/[\x{200B}-\x{200D}\x{FEFF}]/u', '', $normalizedStr);
 
     if (is_null($string) || empty(trim($string))) {
+        if ($e !== null) {
+            throw new $e;
+        }
         return false;
     }
 
     if (!is_null($exactMatch)) {
-        return $string === $exactMatch;
+        if ($string === $exactMatch) {
+            return true;
+        }
+
+        if ($e !== null) {
+            throw new $e;
+        }
+
+        return false;
     }
 
     if (!is_null($maxLength) && mb_strlen($string) > $maxLength) {
+        if ($e !== null) {
+            throw new $e;
+        }
         return false;
     }
 
@@ -155,12 +181,13 @@ function validateKeyStr(
  *
  * @param array $array The array to be validated
  * @param string $key The key to be validated
- * @param int|null $maxValue The maximum numeric value (optional)
- * @param int|null $minValue The minimum numeric value (optional)
- * @param int|null $exactMatch The numeric value for exact match (optional)
- * @param Exception|null $e An optional Exception to be thrown if validation fails
- * @return bool Whether the validation passed or not
- * @throws Exception If the validation fails and an Exception was provided
+ * @param int|null $maxValue [optional] The maximum numeric value.
+ * @param int|null $minValue [optional] The minimum numeric value.
+ * @param int|null $exactMatch [optional] The numeric value for exact match.
+ * @param string|null $e [optional] An Exception name to be thrown if validation fails.
+ * @return bool Whether the validation passed or not.
+ * @throws Exception If the specified key exists in the array but its value is invalid, 
+ *      and an Exception was provided, it will be thrown.
  */
 function validateKeyNum(
     array $array,
@@ -168,12 +195,17 @@ function validateKeyNum(
     ?int $maxValue = null,
     ?int $minValue = null,
     ?int $exactMatch = null,
-    ?Exception $e = null
+    ?string $e = null
 ): bool {
-    $input = $array[$key] ?? null;
+    if (!isset($array[$key])) {
+        return false;
+    }
+
+    $input = $array[$key];
+
     if (!ctype_digit($input)) {
         if ($e !== null) {
-            throw $e;
+            throw new $e;
         }
         return false;
     }
@@ -182,21 +214,21 @@ function validateKeyNum(
 
     if (!is_null($exactMatch) && $number !== $exactMatch) {
         if ($e !== null) {
-            throw $e;
+            throw new $e;
         }
         return false;
     }
 
     if (!is_null($minValue) && $number < $minValue) {
         if ($e !== null) {
-            throw $e;
+            throw new $e;
         }
         return false;
     }
 
     if (!is_null($maxValue) && $number > $maxValue) {
         if ($e !== null) {
-            throw $e;
+            throw new $e;
         }
         return false;
     }

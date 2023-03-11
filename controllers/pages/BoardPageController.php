@@ -2,7 +2,7 @@
 
 class BoardPageController extends AbstractPageController
 {
-    private const NUMBER_ITEMS = 20;
+    private const NUMBER_ITEMS = 10;
     private const PAGE_URL = 'https://mimikyu.info/board';
 
     private BoardModel $model;
@@ -17,9 +17,11 @@ class BoardPageController extends AbstractPageController
 
         // POSTリクエストであるか
         if (isPostRequest()) {
-            // 投稿を書き込む
             $this->post();
         }
+
+        // GETクエリのバリデーション
+        $this->validateGetQuery();
 
         // レコード数を取得する
         $recordCount = $this->model->getRecordCount();
@@ -57,45 +59,21 @@ class BoardPageController extends AbstractPageController
     }
 
     /**
-     * POSTリクエストの処理
+     * GETクエリのバリデーション
+     *      任意のルートパラメーターが設定されている場合、どんなパス名でもアクセスができます。
+     *      SEO的な観点から、有効なパラメーター以外は明示的にNot foundを返すように定義します。
      * 
-     * NOTE: プライベートメソッドはルーティングの対象から外れます
-     */
-    private function post()
-    {
-        // 有効なPOSTリクエストか検証する
-        $this->validatePost();
-
-        // ユーザーの情報を取得する
-        $user = ($_SERVER["REMOTE_ADDR"] ?? '') . ': ' . ($_SERVER['HTTP_USER_AGENT'] ?? '');
-
-        // 投稿をデータベースに書き込む
-        $this->model->write(['text' => $_POST['text'], 'user' => $user]);
-
-        // 投稿があったフラグをセッションにいれる
-        $_SESSION['validPost'] = true;
-
-        // 掲示板にリダイレクトする
-        redirect(self::PAGE_URL);
-    }
-
-    /**
-     * POSTリクエストのバリデーション
+     *      index.phpの Route::run の引数から任意のルートパラメータを設定できます。
+     *      * **例** `Route::run('board/{page}')`
      * 
-     * @throws ValidationException CSRFトークンが無効な場合
-     * @throws InvalidInputException 投稿の文字列が無効な場合
+     *      NOTE: プライベートメソッドはルーティングの対象から外れます
+     * 
+     * @throws NotFoundException URLに無効なパラメータが含まれる場合
      */
-    private function validatePost()
+    private function validateGetQuery()
     {
-        // 有効なCSRFトークンが送られてきているか
-        if (!verifyCsrfToken()) {
-            throw new ValidationException('無効なCSRFトークン');
-        }
-
-        // 送られてきた文字列が「存在する」、「空か空白スペースのみでない」、「100文字以下」であるか
-        if (!validateKeyStr($_POST, 'text', 100)) {
-            throw new InvalidInputException('無効な文字列');
-        }
+        // 値が存在して、数字以外の場合はNot foundを返す
+        validateKeyNum($_GET, 'page', e: 'NotFoundException');
     }
 
     /**
@@ -107,10 +85,7 @@ class BoardPageController extends AbstractPageController
         $max = (int) ceil($recordCount / self::NUMBER_ITEMS);
 
         // リクエストのページ番号を取得する
-        $num = 1;
-        if (validateKeyNum($_GET, 'page')) {
-            $num = (int) $_GET['page'];
-        }
+        $num = (int) ($_GET['page'] ?? 1);
 
         // ページ番号のURLを生成する関数
         $url = function ($num) {
@@ -133,16 +108,16 @@ class BoardPageController extends AbstractPageController
     private function selectPagenation(int $recordCount, int $max, int $num, callable $url): array
     {
         // ページ番号の表示に必要な要素を取得する
-        $element = fn ($url, $select, $i, $end, $n) => "<option value='{$url}' {$select}>{$n}ページ ({$i} - {$end}コメント)</option>";
+        $element = fn ($url, $selected, $start, $end, $i) => "<option value='{$url}' {$selected}>{$i}ページ ({$start} - {$end}コメント)</option>";
 
         // 選択されたページに対して"selected"属性を返す
-        $selected = fn ($n) => ($n === $num) ? "selected='selected'" : '';
+        $selected = fn ($i) => ($i === $num) ? "selected='selected'" : '';
 
         // ページ番号に応じて、そのページの最初のデータの番号を計算する
-        $startNum = fn ($n) => ($n === 1) ? $recordCount : $recordCount - self::NUMBER_ITEMS * ($n - 1);
+        $startNum = fn ($i) => ($i === 1) ? $recordCount : $recordCount - self::NUMBER_ITEMS * ($i - 1);
 
         // ページ番号に応じて、そのページの最後のデータの番号を計算する
-        $endNum = fn ($n) => ($n === $max) ? 1 : $recordCount - self::NUMBER_ITEMS * ($n + 1);
+        $endNum = fn ($i) => ($i === $max) ? 1 : $recordCount - self::NUMBER_ITEMS * $i;
 
         // 各ページ番号の要素を生成する
         $html = '';
@@ -171,5 +146,45 @@ class BoardPageController extends AbstractPageController
         $weekDayIndex = (int) $dateTime->format('w');
 
         return $dateTime->format('Y/m/d') . '(' . $weekDays[$weekDayIndex] . ') ' . $dateTime->format('H:i:s');
+    }
+
+    /**
+     * POSTリクエストの処理
+     */
+    private function post()
+    {
+        // 有効なPOSTリクエストか検証する
+        $this->validatePostRequest();
+
+        // ユーザーの情報を取得する
+        $user = ($_SERVER["REMOTE_ADDR"] ?? '') . ': ' . ($_SERVER['HTTP_USER_AGENT'] ?? '');
+
+        // 投稿をデータベースに書き込む
+        $this->model->write(['text' => $_POST['text'], 'user' => $user]);
+
+        // 投稿があったフラグをセッションにいれる
+        $_SESSION['validPost'] = true;
+
+        // 掲示板にリダイレクトする
+        redirect(self::PAGE_URL);
+    }
+
+    /**
+     * POSTリクエストのバリデーション
+     * 
+     * @throws ValidationException CSRFトークンが無効な場合
+     * @throws InvalidInputException 投稿の文字列が無効な場合
+     */
+    private function validatePostRequest()
+    {
+        // 有効なCSRFトークンが送られてきているか
+        if (!verifyCsrfToken()) {
+            throw new ValidationException('無効なCSRFトークン');
+        }
+
+        // 送られてきた文字列が「存在する」、「空か空白スペースのみでない」、「100文字以下」であるか
+        if (!validateKeyStr($_POST, 'text', 100)) {
+            throw new InvalidInputException('無効な文字列');
+        }
     }
 }
