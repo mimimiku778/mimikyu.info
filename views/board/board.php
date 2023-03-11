@@ -16,11 +16,16 @@
             <p><a href="https://github.com/mimimiku778/mimikyu.info/blob/master/views/board/board.php">
                     ビュー Github</a>
             </p>
+            <p><a href="https://github.com/mimimiku778/MimimalCMS">
+                    これで作ってます Github</a>
+            </p>
         </header>
 
         <!-- 送信フォーム -->
         <form action="/board" method="POST">
-            <label for="hitokoto"><h2>なにかひとこと:</h2></label>
+            <label for="hitokoto">
+                <h2>なにかひとこと:</h2>
+            </label>
             <input name="text" id="hitokoto" type="text" maxlength="100" />
 
             <!-- CSRFトークンをセットする -->
