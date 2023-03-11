@@ -106,7 +106,7 @@ class BoardPageController extends AbstractPageController
         // ページの最大数を計算する
         $max = (int) ceil($recordCount / self::NUMBER_ITEMS);
 
-        // リクエストのページ番号を取得
+        // リクエストのページ番号を取得する
         $num = 1;
         if (validateKeyNum($_GET, 'page')) {
             $num = (int) $_GET['page'];
@@ -114,7 +114,7 @@ class BoardPageController extends AbstractPageController
 
         // ページ番号のURLを生成する関数
         $url = function ($num) {
-            // ページ番号が1の場合は削除
+            // ページ番号が1の場合は削除する
             if ($num === 1) {
                 $path = '';
             } else {
@@ -144,17 +144,17 @@ class BoardPageController extends AbstractPageController
         // ページ番号に応じて、そのページの最後のデータの番号を計算する
         $endNum = fn ($n) => ($n === $max) ? 1 : $recordCount - self::NUMBER_ITEMS * ($n + 1);
 
-        // 各ページ番号の要素を生成
+        // 各ページ番号の要素を生成する
         $html = '';
         for ($i = 1; $i <= $max; $i++) {
             $html .= $element($url($i), $selected($i), $startNum($i), $endNum($i), $i) . "\n";
         }
 
-        // ラベルの番号を取得
+        // ラベルの番号を取得する
         $labelStartNum = $startNum($num);
         $LabelEndNum = $endNum($num);
 
-        // select要素のラベルを生成
+        // select要素のラベルを生成する
         $label = "{$num}ページ ({$labelStartNum} - {$LabelEndNum}コメント)";
 
         return [$html, $label];
