@@ -188,3 +188,15 @@ function validateKeyNum(
 
     return true;
 }
+
+/**
+ * Remove zero-width spaces from a string.
+ *
+ * @param string $str The input string.
+ * @return string The input string without zero-width spaces.
+ */
+function removeZWS(string $str): string
+{
+    $normalizedStr = Normalizer::normalize($str, Normalizer::FORM_KC);
+    return preg_replace('/[\x{200B}-\x{200D}\x{FEFF}]/u', '', $normalizedStr);
+}
