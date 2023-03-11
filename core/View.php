@@ -2,9 +2,6 @@
 
 /**
  * View class for rendering and displaying templates.
- * 
- * @author mimimiku778 <0203.sub@gmail.com>
- * @license https://github.com/mimimiku778/MimimalCMS/blob/master/LICENSE.md
  */
 class View
 {
@@ -19,9 +16,13 @@ class View
      * Render a template file with optional values.
      *
      * @param string $viewTemplateFile Path to the template file.
-     * @param array|null $valuesArray Optional values to pass to the template.
-     * * NOTE: Keys starting with "__" will not be sanitized.
+     * @param array|null $valuesArray Optional associative array of values to pass to the template, 
+     *      Keys starting with "__" will not be sanitized.
+     *      * NOTE: The passed array must be an associative array, where keys represent variable names in the view.
+     *              The values of the associative array must be strings or arrays, except for keys starting with "__",
+     *              which can contain nested strings and arrays.
      * 
+     * @throws InvalidArgumentException If passed invalid array values.
      * @throws LogicException If rendering fails.
      */
     public static function render(string $viewTemplateFile, ?array $valuesArray = null): void
@@ -33,15 +34,23 @@ class View
      * Gets rendered template as a string.
      *
      * @param string $viewTemplateFile Path to the template file.
-     * @param array|null $valuesArray Optional values to pass to the template.
-     * * NOTE: Keys starting with "__" will not be sanitized.
+     * @param array|null $valuesArray Optional associative array of values to pass to the template, 
+     *      Keys starting with "__" will not be sanitized.
+     *      * NOTE: The passed array must be an associative array, where keys represent variable names in the view.
+     *              The values of the associative array must be strings or arrays, except for keys starting with "__",
+     *              which can contain nested strings and arrays.
      * 
      * @return string The rendered template as a string.
+     * @throws InvalidArgumentException If passed invalid array values.
      * @throws LogicException If rendering fails.
      */
     public static function get(string $viewTemplateFile, ?array $valuesArray = null): string
     {
         if ($valuesArray !== null) {
+            if (array_values($valuesArray) === $valuesArray) {
+                throw new InvalidArgumentException('The passed array must be an associative array.');
+            }
+
             extract(self::sanitizeArray($valuesArray));
         }
 
@@ -65,10 +74,11 @@ class View
     }
 
     /**
-     * Sanitize an array of values recursively to prevent XSS attacks.
+     * Sanitizes an array of values recursively to prevent XSS attacks.
      *
      * @param array $array Array of values to sanitize.
      * @return array The sanitized array.
+     * @throws InvalidArgumentException If a value is neither an array nor a string.
      */
     private static function sanitizeArray(array $array): array
     {
@@ -82,8 +92,10 @@ class View
 
             if (is_array($value)) {
                 $sanitizedArray[$key] = self::sanitizeArray($value);
-            } else {
+            } elseif (is_string($value)) {
                 $sanitizedArray[$key] = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+            } else {
+                throw new InvalidArgumentException('Invalid data type. Value must be an array or a string.');
             }
         }
 
