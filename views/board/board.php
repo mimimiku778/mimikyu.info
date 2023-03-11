@@ -26,7 +26,7 @@
             <label for="hitokoto">
                 <h2>なにかひとこと:</h2>
             </label>
-            <input name="text" id="hitokoto" type="text" maxlength="100" />
+            <input name="text" id="hitokoto" type="text" maxlength="100" autocomplete="off"/>
 
             <!-- CSRFトークンをセットする -->
             <?php csrfField() ?>
