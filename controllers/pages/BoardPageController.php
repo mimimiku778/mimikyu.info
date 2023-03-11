@@ -155,7 +155,7 @@ class BoardPageController extends AbstractPageController
     }
 
     /**
-     * MySQLの日付フォーマット「2023/03/11(土) 05:37:25」の形式に変換
+     * MySQLの日付フォーマットを「2023/03/11(土) 05:37:25」の形式に変換
      */
     private function getDateTimeFormatted(string $dateTimeString): string
     {
