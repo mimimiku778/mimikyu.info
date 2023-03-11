@@ -92,10 +92,10 @@ class View
 
             if (is_array($value)) {
                 $sanitizedArray[$key] = self::sanitizeArray($value);
-            } elseif (is_string($value)) {
+            } elseif (is_string($value) || is_int($value)) {
                 $sanitizedArray[$key] = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
             } else {
-                throw new InvalidArgumentException('Invalid data type. Value must be an array or a string.');
+                throw new InvalidArgumentException('Invalid data type. Value must be an array or a string: ' . $key);
             }
         }
 
