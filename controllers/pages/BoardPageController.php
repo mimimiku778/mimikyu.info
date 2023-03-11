@@ -144,7 +144,7 @@ class BoardPageController extends AbstractPageController
         // ページ番号に応じて、そのページの最後のデータの番号を計算する
         $endNum = fn ($n) => ($n === $max) ? 1 : $recordCount - self::NUMBER_ITEMS * ($n + 1);
 
-        // 各ページ番号の要素を作成
+        // 各ページ番号の要素を生成
         $html = '';
         for ($i = 1; $i <= $max; $i++) {
             $html .= $element($url($i), $selected($i), $startNum($i), $endNum($i), $i) . "\n";
@@ -154,7 +154,7 @@ class BoardPageController extends AbstractPageController
         $labelStartNum = $startNum($num);
         $LabelEndNum = $endNum($num);
 
-        // select要素のラベルを作成
+        // select要素のラベルを生成
         $label = "{$num}ページ ({$labelStartNum} - {$LabelEndNum}コメント)";
 
         return [$html, $label];
