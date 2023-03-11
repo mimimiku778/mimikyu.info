@@ -247,3 +247,65 @@ function removeZWS(string $str): string
     $normalizedStr = Normalizer::normalize($str, Normalizer::FORM_KC);
     return preg_replace('/[\x{200B}-\x{200D}\x{FEFF}]/u', '', $normalizedStr);
 }
+
+/**
+ * Get a numeric value from the query string for the specified key, or return the default value if not found or invalid.
+ * 
+ * @param string $key The key to retrieve from the query string
+ * @param int $default The default numeric value to return if the key is not found or the value is invalid
+ * @return int The retrieved numeric value, or the default value if not found or invalid
+ */
+function getQueryNumValue(string $queryKey, int $defaultValue): int
+{
+    return (int) ($_GET[$queryKey] ?? $defaultValue);
+}
+
+/**
+ * Calculates the maximum number of pages needed to display a set of records,
+ * given the total number of records and the number of records to display per page.
+ *
+ * @param int $totalRecords The total number of records to display.
+ * @param int $itemsPerPage The number of records to display per page.
+ * @return int The maximum number of pages needed to display all the records.
+ */
+function calcMaxPages(int $totalRecords, int $recordsPerPage): int
+{
+    return (int) ceil($totalRecords / $recordsPerPage);
+}
+
+/**
+ * Calculate the starting index for a given page.
+ *
+ * @param int $pageNumber The current page number.
+ * @param int $totalRecords The total number of records.
+ * @param int $itemsPerPage The number of items to display per page.
+ *
+ * @return int The starting index for the current page.
+ */
+function calcStartIndex(int $pageNumber, int $totalRecords, int $itemsPerPage): int
+{
+    if ($pageNumber === 1) {
+        return $totalRecords;
+    }
+
+    return $totalRecords - $itemsPerPage * ($pageNumber - 1);
+}
+
+/**
+ * Calculate the ending index for a given page.
+ *
+ * @param int $pageNumber The current page number.
+ * @param int $totalRecords The total number of records.
+ * @param int $itemsPerPage The number of items to display per page.
+ * @param int $maxPage The total number of pages needed to display all records.
+ *
+ * @return int The ending index for the current page.
+ */
+function calcEndIndex(int $pageNumber, int $totalRecords, int $itemsPerPage, int $maxPage): int
+{
+    if ($pageNumber === $maxPage) {
+        return 1;
+    }
+
+    return $totalRecords - $itemsPerPage * $pageNumber;
+}

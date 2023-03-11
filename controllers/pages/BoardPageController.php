@@ -24,10 +24,10 @@ class BoardPageController extends AbstractPageController
         $this->validateGetQuery();
 
         // レコード数を取得する
-        $recordCount = $this->model->getRecordCount();
+        $totalRecords = $this->model->getRecordCount();
 
         // ページネーションの値を取得する
-        $__pager = $this->pagenation($recordCount);
+        $__pager = $this->pagenation($totalRecords);
 
         // リクエストのページ番号が最大ページ数を超える場合はリダイレクト
         if ($__pager['num'] > $__pager['max']) {
@@ -35,7 +35,7 @@ class BoardPageController extends AbstractPageController
         }
 
         // ページネーションの要素を取得する
-        $__selectPager = $this->selectPagenation($recordCount, ...$__pager);
+        $__selectPager = $this->selectPagenation($totalRecords, ...$__pager);
 
         // 投稿を何件目から取得するか計算する
         $offset = $__pager['num'] === 1 ? 0 : self::NUMBER_ITEMS * ($__pager['num'] - 1);
@@ -72,28 +72,28 @@ class BoardPageController extends AbstractPageController
      */
     private function validateGetQuery()
     {
-        // 値が存在して、数字以外の場合はNot foundを返す
-        validateKeyNum($_GET, 'page', e: 'NotFoundException');
+        // キーは存在するが、無効な値の場合はNot foundを返す
+        validateKeyNum($_GET, 'page', minValue: 1, e: 'NotFoundException');
     }
 
     /**
      * ページネーションの値を取得
      */
-    private function pagenation(int $recordCount): array
+    private function pagenation(int $totalRecords): array
     {
         // ページの最大数を計算する
-        $max = (int) ceil($recordCount / self::NUMBER_ITEMS);
+        $max = calcMaxPages($totalRecords, self::NUMBER_ITEMS);
 
         // リクエストのページ番号を取得する
-        $num = (int) ($_GET['page'] ?? 1);
+        $num = getQueryNumValue('page', 1);
 
         // ページ番号のURLを生成する関数
-        $url = function ($num) {
+        $url = function ($n) {
             // ページ番号が1の場合は削除する
-            if ($num === 1) {
+            if ($n === 1) {
                 $path = '';
             } else {
-                $path = '/' . (string) $num;
+                $path = '/' . (string) $n;
             }
 
             return self::PAGE_URL . "{$path}";
@@ -105,7 +105,7 @@ class BoardPageController extends AbstractPageController
     /**
      * ページネーションのselect要素を生成
      */
-    private function selectPagenation(int $recordCount, int $max, int $num, callable $url): array
+    private function selectPagenation(int $totalRecords, int $max, int $num, callable $url): array
     {
         // ページ番号の表示に必要な要素を取得する
         $element = fn ($url, $selected, $start, $end, $i) => "<option value='{$url}' {$selected}>{$i}ページ ({$start} - {$end}コメント)</option>";
@@ -113,11 +113,11 @@ class BoardPageController extends AbstractPageController
         // 選択されたページに対して"selected"属性を返す
         $selected = fn ($i) => ($i === $num) ? "selected='selected'" : '';
 
-        // ページ番号に応じて、そのページの最初のデータの番号を計算する
-        $startNum = fn ($i) => ($i === 1) ? $recordCount : $recordCount - self::NUMBER_ITEMS * ($i - 1);
+        // ページ番号に応じて、そのページの最初のインデックスを計算する
+        $startNum = fn ($i) => calcStartIndex($i, $totalRecords, self::NUMBER_ITEMS);
 
-        // ページ番号に応じて、そのページの最後のデータの番号を計算する
-        $endNum = fn ($i) => ($i === $max) ? 1 : $recordCount - self::NUMBER_ITEMS * $i;
+        // ページ番号に応じて、そのページの最後のインデックスを計算する
+        $endNum = fn ($i) => calcEndIndex($i, $totalRecords, self::NUMBER_ITEMS, $max);
 
         // 各ページ番号の要素を生成する
         $html = '';
