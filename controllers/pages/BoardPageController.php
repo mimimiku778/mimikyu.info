@@ -108,7 +108,7 @@ class BoardPageController extends AbstractPageController
             }
         }
 
-        // Viewで使うページのURLを生成するコールバック関数
+        // ページ番号のURLを生成するコールバック関数
         $url = function ($num) {
             // ページ番号が1の場合は削除
             if ($num === 1) {
