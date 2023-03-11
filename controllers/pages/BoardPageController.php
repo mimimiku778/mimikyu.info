@@ -174,6 +174,7 @@ class BoardPageController extends AbstractPageController
      * 
      * @throws ValidationException CSRFトークンが無効な場合
      * @throws InvalidInputException 投稿の文字列が無効な場合
+     *      上記の Exception は ExeptionHandler で捕捉されて、400 Bad requestを返すようになっています。
      */
     private function validatePostRequest()
     {
