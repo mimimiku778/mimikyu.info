@@ -55,11 +55,7 @@ class BoardPageController extends AbstractPageController
     private function post()
     {
         // 有効なPOSTリクエストか検証する
-        try {
-            $this->validatePost();
-        } catch (InvalidInputException | ValidationException $e) {
-            throw new NotFoundException();
-        }
+        $this->validatePost();
 
         // ユーザーの情報を取得する
         $user = ($_SERVER["REMOTE_ADDR"] ?? '') . ': ' . ($_SERVER['HTTP_USER_AGENT'] ?? '');
@@ -76,6 +72,9 @@ class BoardPageController extends AbstractPageController
 
     /**
      * POSTリクエストのバリデーション
+     * 
+     * @throws ValidationException
+     * @throws InvalidInputException
      */
     private function validatePost()
     {

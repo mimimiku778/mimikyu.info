@@ -4,6 +4,10 @@ class NotFoundException extends RuntimeException
 {
 }
 
+class BadRequestException extends RuntimeException
+{
+}
+
 class ValidationException extends RuntimeException
 {
 }
