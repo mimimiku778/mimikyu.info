@@ -83,7 +83,7 @@ class BoardPageController extends AbstractPageController
             throw new ValidationException('無効なCSRFトークン');
         }
 
-        // 送られてきたデータが有効であるか
+        // 送られてきた文字列が「存在する」、「空か空白スペースのみでない」、「100文字以下」であるか
         if (!validateKeyStr($_POST, 'text', 100)) {
             throw new InvalidInputException('無効な文字列');
         }
