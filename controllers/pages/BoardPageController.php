@@ -73,8 +73,8 @@ class BoardPageController extends AbstractPageController
     /**
      * POSTリクエストのバリデーション
      * 
-     * @throws ValidationException
-     * @throws InvalidInputException
+     * @throws ValidationException CSRFトークンが無効な場合
+     * @throws InvalidInputException 投稿の文字列が無効な場合
      */
     private function validatePost()
     {
