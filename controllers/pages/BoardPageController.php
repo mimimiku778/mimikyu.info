@@ -109,7 +109,14 @@ class BoardPageController extends AbstractPageController
         }
 
         // Viewで使うページのURLを生成するコールバック関数
-        $url = fn ($num) => "https://mimikyu.info/board/{$num}";
+        $url = function ($num) {
+            // ページ番号が1の場合は削除
+            if ($num === 1) {
+                $num = '';
+            }
+
+            return "https://mimikyu.info/board/{$num}";
+        };
 
         return compact('max', 'num', 'url');
     }
