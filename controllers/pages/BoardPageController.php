@@ -10,14 +10,14 @@ class BoardPageController extends AbstractPageController
      */
     public function index()
     {
+        // 掲示板のモデル
+        $this->model = new BoardModel;
+
         // POSTリクエストであるか
         if (isPostRequest()) {
             // 投稿を書き込む
             $this->post();
         }
-
-        // 掲示板のモデル
-        $this->model = new BoardModel;
 
         // レコード数を取得する
         $recordCount = $this->model->getRecordCount();
@@ -64,10 +64,8 @@ class BoardPageController extends AbstractPageController
         // ユーザーの情報を取得する
         $user = ($_SERVER["REMOTE_ADDR"] ?? '') . ': ' . ($_SERVER['HTTP_USER_AGENT'] ?? '');
 
-        // 掲示板のモデル
-        $model = new BoardModel;
         // 投稿をデータベースに書き込む
-        $model->write(['text' => $_POST['text'], 'user' => $user]);
+        $this->model->write(['text' => $_POST['text'], 'user' => $user]);
 
         // 投稿があったフラグをセッションにいれる
         $_SESSION['validPost'] = true;
