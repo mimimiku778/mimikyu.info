@@ -12,6 +12,10 @@ class ExceptionHandler
      */
     public static function handleException(Throwable $exception)
     {
+        if (ob_get_length() !== false) {
+            ob_clean();
+        }
+
         if ($exception instanceof NotFoundException) {
             self::notFound();
             return;
@@ -19,21 +23,25 @@ class ExceptionHandler
 
         if ($exception instanceof BadRequestException) {
             self::badRequest();
-            return;
+            self::errorLog($exception);
         }
 
         if ($exception instanceof ValidationException) {
             self::badRequest();
+            self::errorLog($exception);
         }
 
         if ($exception instanceof InvalidInputException) {
             self::badRequest();
+            self::errorLog($exception);
         }
 
         if ($exception instanceof DataIntegrityViolationException) {
             self::badRequest();
+            self::errorLog($exception);
         }
 
+        self::internalServerError();
         self::errorLog($exception);
     }
 
@@ -48,7 +56,7 @@ class ExceptionHandler
             jsonResponse(['error' => '404 Not Found']);
         }
 
-        echo '404 Not Found';
+        echo '404 Not Found <br>';
     }
 
     /**
@@ -62,21 +70,28 @@ class ExceptionHandler
             jsonResponse(['error' => '400 Bad Request']);
         }
 
-        echo '400 Bad Request';
+        echo '400 Bad Request <br>';
+    }
+
+    public static function internalServerError()
+    {
+        http_response_code(500);
+
+        if (isJsonRequest()) {
+            jsonResponse(['error' => '500 Internal Server Error'], exit: false);
+        }
+
+        echo '500 Internal Server Error <br>';
     }
 
     /**
-     * Writes error messages to the error log file.
+     * Writes error messages to the error log file and exits.
+     * 
+     * @param bool $exit [optional] Whether to exit after writing error messages. Default is true.
      */
-    public static function errorLog(Throwable $exception)
+    public static function errorLog(Throwable $exception, bool $exit = true)
     {
-        if (ob_get_length() !== false) {
-            ob_clean();
-        }
-
         $message = get_class($exception) . ': ' . $exception->getMessage() . ': ' . $exception->getTraceAsString();
-
-        http_response_code(500);
 
         if (defined('EXCEPTION_HANDLER_DISPLAY_ERRORS') && EXCEPTION_HANDLER_DISPLAY_ERRORS === true) {
             if (isJsonRequest()) {
@@ -84,12 +99,6 @@ class ExceptionHandler
             }
 
             echo $message;
-        } else {
-            if (isJsonRequest()) {
-                jsonResponse(['error' => '500 Internal Server Error'], exit: false);
-            }
-
-            echo '500 Internal Server Error';
         }
 
         if (isset($_SERVER["REMOTE_ADDR"]) && isset($_SERVER['HTTP_USER_AGENT'])) {
@@ -98,5 +107,9 @@ class ExceptionHandler
 
         $time = date('Y-m-d H:i:s') . ' ' . date_default_timezone_get() . ': ';
         error_log($time . $message . "\n", 3, EXCEPTION_LOG_DIRECTORY);
+
+        if ($exit) {
+            exit;
+        }
     }
 }
