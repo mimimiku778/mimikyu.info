@@ -45,7 +45,9 @@ const addClick = (element, callback) => element && element.addEventListener('cli
  */
 const toggleButtonByInputValue = (input, button) => {
   input.addEventListener('input', () => {
-    button.disabled = input.value.trim() === '';
+    const normalizedStr = input.value.normalize('NFKC');
+    const string = normalizedStr.replace(/[\u200B-\u200D\uFEFF]/g, '');
+    button.disabled = string.trim() === '';
   });
 };
 

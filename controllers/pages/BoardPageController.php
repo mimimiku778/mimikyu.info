@@ -2,7 +2,7 @@
 
 class BoardPageController extends AbstractPageController
 {
-    private const NUMBER_ITEMS = 10;
+    private const NUMBER_ITEMS = 20;
     private BoardModel $model;
 
     /**
