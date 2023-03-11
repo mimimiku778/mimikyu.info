@@ -3,7 +3,7 @@
 class BoardPageController extends AbstractPageController
 {
     private const NUMBER_ITEMS = 10;
-    private const PAGE_URL = 'https://mimikyu.info/board';
+    public const PAGE_URL = 'https://mimikyu.info/board';
 
     private BoardModel $model;
 
@@ -26,22 +26,25 @@ class BoardPageController extends AbstractPageController
         // レコード数を取得する
         $totalRecords = $this->model->getRecordCount();
 
-        // ページネーションの値を取得する
-        $__pager = $this->pagenation($totalRecords);
+        // ページの最大数を計算する
+        $maxPage = calcMaxPages($totalRecords, self::NUMBER_ITEMS);
+
+        // リクエストのページ番号を取得する
+        $pageNumber = getQueryNumValue('page', 1);
 
         // リクエストのページ番号が最大ページ数を超える場合はリダイレクト
-        if ($__pager['num'] > $__pager['max']) {
+        if ($pageNumber > $maxPage) {
             redirect(self::PAGE_URL);
         }
 
-        // ページネーションの要素を取得する
-        $__selectPager = $this->selectPagenation($totalRecords, ...$__pager);
+        // ページネーションのselect要素を取得する
+        $__selectPager = $this->selectPagenation($pageNumber, $totalRecords, self::NUMBER_ITEMS, $maxPage, self::PAGE_URL);
 
-        // 投稿を何件目から取得するか計算する
-        $offset = $__pager['num'] === 1 ? 0 : self::NUMBER_ITEMS * ($__pager['num'] - 1);
+        // ビューに渡すページネーションの値
+        $__pager = compact('maxPage', 'pageNumber') + ['url' => self::PAGE_URL];
 
         // 投稿リストを取得する
-        $posts = $this->model->get(['offset' => $offset, 'limit' => self::NUMBER_ITEMS]);
+        $posts = $this->model->get(['offset' => calcOffset($pageNumber, self::NUMBER_ITEMS), 'limit' => self::NUMBER_ITEMS]);
 
         // 日付の形式を変換する
         foreach ($posts as &$post) {
@@ -77,53 +80,36 @@ class BoardPageController extends AbstractPageController
     }
 
     /**
-     * ページネーションの値を取得
+     * 降順ページネーションのselect要素を生成
      */
-    private function pagenation(int $totalRecords): array
-    {
-        // ページの最大数を計算する
-        $max = calcMaxPages($totalRecords, self::NUMBER_ITEMS);
-
-        // リクエストのページ番号を取得する
-        $num = getQueryNumValue('page', 1);
-
-        // ページ番号のURLを生成する関数
-        $url = generatePagerUrl($totalRecords, self::PAGE_URL);
-
-        return compact('max', 'num', 'url');
-    }
-
-    /**
-     * ページネーションのselect要素を生成
-     */
-    private function selectPagenation(int $totalRecords, int $max, int $num, callable $url): array
+    private function selectPagenation(int $pageNumber, int $totalRecords, int $itemsPerPage, int $maxPage, string $url): array
     {
         // ページ番号の表示に必要な要素を取得する
-        $element = fn ($url, $selected, $start, $end, $i) => "<option value='{$url}' {$selected}>{$i}ページ ({$start} - {$end}コメント)</option>";
+        $getElement = fn ($url, $selected, $start, $end, $i) => "<option value='{$url}' {$selected}>{$i}ページ ({$start} - {$end}コメント)</option>";
 
         // 選択されたページに対して"selected"属性を返す
-        $selected = fn ($i) => ($i === $num) ? "selected='selected'" : '';
+        $selected = fn ($i) => ($i === $pageNumber) ? "selected='selected'" : '';
 
         // ページ番号に応じて、そのページの最初のインデックスを計算する
-        $startNum = fn ($i) => calcStartIndex($i, $totalRecords, self::NUMBER_ITEMS);
+        $startNum = fn ($i) => calcDescRecordIndex($i, $totalRecords, $itemsPerPage);
 
         // ページ番号に応じて、そのページの最後のインデックスを計算する
-        $endNum = fn ($i) => calcEndIndex($i, $totalRecords, self::NUMBER_ITEMS, $max);
+        $endNum = fn ($i) => calcDescRecordIndex($i, $totalRecords, $itemsPerPage, $maxPage);
 
         // 各ページ番号の要素を生成する
-        $html = '';
-        for ($i = 1; $i <= $max; $i++) {
-            $html .= $element($url($i), $selected($i), $startNum($i), $endNum($i), $i) . "\n";
+        $selectElement = '';
+        for ($i = 1; $i <= $maxPage; $i++) {
+            $selectElement .= $getElement(generatePagerUrl($i, $url), $selected($i), $startNum($i), $endNum($i), $i) . "\n";
         }
 
         // ラベルの番号を取得する
-        $labelStartNum = $startNum($num);
-        $LabelEndNum = $endNum($num);
+        $labelStartNum = $startNum($pageNumber);
+        $LabelEndNum = $endNum($pageNumber);
 
         // select要素のラベルを生成する
-        $label = "{$num}ページ ({$labelStartNum} - {$LabelEndNum}コメント)";
+        $label = "{$pageNumber}ページ ({$labelStartNum} - {$LabelEndNum}コメント)";
 
-        return [$html, $label];
+        return [$selectElement, $label];
     }
 
     /**

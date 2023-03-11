@@ -270,6 +270,19 @@ function sanitizeString(string $string): string
 }
 
 /**
+ * Calculate offset for given page number and number of items per page.
+ *
+ * @param int $pageNumber The current page number.
+ * @param int $numberOfItemsPerPage The number of items to display per page.
+ * @return int The calculated offset.
+ */
+function calcOffset(int $pageNumber, int $numberOfItemsPerPage): int
+{
+    $offset = $pageNumber === 1 ? 0 : $numberOfItemsPerPage * ($pageNumber - 1);
+    return $offset;
+}
+
+/**
  * Get a numeric value from the query string for the specified key, or return the default value if not found or invalid.
  * 
  * @param string $key The key to retrieve from the query string
@@ -295,35 +308,25 @@ function calcMaxPages(int $totalRecords, int $recordsPerPage): int
 }
 
 /**
- * Calculate the starting index for a given page.
- *
+ * Calculates the record index for the current page in descending order based on the given parameters.
+ * If $maxPage is specified, it returns the ending index for the current page in descending order.
+ * 
  * @param int $pageNumber The current page number.
  * @param int $totalRecords The total number of records.
  * @param int $itemsPerPage The number of items to display per page.
- *
- * @return int The starting index for the current page.
+ * @param int|null $maxPage [optional] The total number of pages needed to display all records in descending order.
+ * @return int The record index for the current page in descending order.
  */
-function calcStartIndex(int $pageNumber, int $totalRecords, int $itemsPerPage): int
+function calcDescRecordIndex(int $pageNumber, int $totalRecords, int $itemsPerPage, ?int $maxPage = null): int
 {
-    if ($pageNumber === 1) {
-        return $totalRecords;
+    if (is_null($maxPage)) {
+        if ($pageNumber === 1) {
+            return $totalRecords;
+        }
+
+        return $totalRecords - $itemsPerPage * ($pageNumber - 1);
     }
 
-    return $totalRecords - $itemsPerPage * ($pageNumber - 1);
-}
-
-/**
- * Calculate the ending index for a given page.
- *
- * @param int $pageNumber The current page number.
- * @param int $totalRecords The total number of records.
- * @param int $itemsPerPage The number of items to display per page.
- * @param int $maxPage The total number of pages needed to display all records.
- *
- * @return int The ending index for the current page.
- */
-function calcEndIndex(int $pageNumber, int $totalRecords, int $itemsPerPage, int $maxPage): int
-{
     if ($pageNumber === $maxPage) {
         return 1;
     }
