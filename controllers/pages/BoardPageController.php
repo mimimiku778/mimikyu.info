@@ -112,7 +112,7 @@ class BoardPageController extends AbstractPageController
             $num = (int) $_GET['page'];
         }
 
-        // ページ番号のURLを生成するコールバック関数
+        // ページ番号のURLを生成する関数
         $url = function ($num) {
             // ページ番号が1の場合は削除
             if ($num === 1) {
