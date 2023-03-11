@@ -116,10 +116,12 @@ class BoardPageController extends AbstractPageController
         $url = function ($num) {
             // ページ番号が1の場合は削除
             if ($num === 1) {
-                $num = '';
+                $path = '';
+            } else {
+                $path = '/' . (string) $num;
             }
 
-            return self::PAGE_URL . "/{$num}";
+            return self::PAGE_URL . "{$path}";
         };
 
         return compact('max', 'num', 'url');
