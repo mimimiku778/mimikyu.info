@@ -130,7 +130,7 @@ class BoardPageController extends AbstractPageController
         $startNum = fn ($n) => ($n === 1) ? $recordCount : $recordCount - self::NUMBER_ITEMS * ($n - 1);
 
         // ページ番号に応じて、そのページの最後のデータの番号を計算する
-        $endNum = fn ($n) => ($n === $max) ? 1 : $recordCount - self::NUMBER_ITEMS * $n + 1;
+        $endNum = fn ($n) => ($n === $max) ? 1 : $recordCount - self::NUMBER_ITEMS * ($n + 1);
 
         // 各ページ番号の要素を作成
         $html = '';
