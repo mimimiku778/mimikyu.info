@@ -98,7 +98,7 @@ class ExceptionHandler
                 jsonResponse(['error' => $message], exit: false);
             }
 
-            echo $message;
+            echo nl2br($message);
         }
 
         if (isset($_SERVER["REMOTE_ADDR"]) && isset($_SERVER['HTTP_USER_AGENT'])) {
