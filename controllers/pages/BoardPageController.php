@@ -88,16 +88,7 @@ class BoardPageController extends AbstractPageController
         $num = getQueryNumValue('page', 1);
 
         // ページ番号のURLを生成する関数
-        $url = function ($n) {
-            // ページ番号が1の場合は削除する
-            if ($n === 1) {
-                $path = '';
-            } else {
-                $path = '/' . (string) $n;
-            }
-
-            return self::PAGE_URL . "{$path}";
-        };
+        $url = generatePagerUrl($totalRecords, self::PAGE_URL);
 
         return compact('max', 'num', 'url');
     }
@@ -156,11 +147,8 @@ class BoardPageController extends AbstractPageController
         // 有効なPOSTリクエストか検証する
         $this->validatePostRequest();
 
-        // ユーザーの情報を取得する
-        $user = ($_SERVER["REMOTE_ADDR"] ?? '') . ': ' . ($_SERVER['HTTP_USER_AGENT'] ?? '');
-
         // 投稿をデータベースに書き込む
-        $this->model->write(['text' => $_POST['text'], 'user' => $user]);
+        $this->model->write(['text' => $_POST['text'], 'user' => createUserLogStr()]);
 
         // 投稿があったフラグをセッションにいれる
         $_SESSION['validPost'] = true;

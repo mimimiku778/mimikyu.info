@@ -3,6 +3,27 @@
 declare(strict_types=1);
 
 /**
+ * Check if the request is POST method.
+ * 
+ * @return bool Whether the request is POST method.
+ */
+function isPostRequest(): bool
+{
+    return $_SERVER['REQUEST_METHOD'] === 'POST';
+}
+
+/**
+ * Redirects the user to the specified URL using the specified HTTP response code.
+ * 
+ * @param string $url The URL to redirect to.
+ * @param int $responseCode The HTTP response code to use. Defaults to 301.
+ */
+function redirect(string $url, int $responseCode = 301)
+{
+    header('Location: ' . $url, true, $responseCode);
+}
+
+/**
  * Returns HTTP status code and response in JSON format and exits.
  *
  * @param array $data The array to be returned as response.
@@ -32,16 +53,6 @@ function jsonResponse(array $data, ?int $responseCode = null, bool $exit = true)
 function isJsonRequest(): bool
 {
     return strpos($_SERVER['CONTENT_TYPE'] ?? '', 'application/json') !== false;
-}
-
-/**
- * Check if the request is POST method.
- * 
- * @return bool Whether the request is POST method.
- */
-function isPostRequest(): bool
-{
-    return $_SERVER['REQUEST_METHOD'] === 'POST';
 }
 
 /**
@@ -102,14 +113,13 @@ function getRemoveSessionValue(string $name): mixed
 }
 
 /**
- * Redirects the user to the specified URL using the specified HTTP response code.
+ * Create a log message from the user's IP address and user agent.
  * 
- * @param string $url The URL to redirect to.
- * @param int $responseCode The HTTP response code to use. Defaults to 301.
+ * @return string The log message in the format "IP Address: User Agent".
  */
-function redirect(string $url, int $responseCode = 301)
+function createUserLogStr(): string
 {
-    header('Location: ' . $url, true, $responseCode);
+    return preg_replace('/[^(\x20-\x7F)]*/', '', ($_SERVER["REMOTE_ADDR"] ?? '') . ': ' . ($_SERVER['HTTP_USER_AGENT'] ?? ''));
 }
 
 /**
@@ -249,6 +259,17 @@ function removeZWS(string $str): string
 }
 
 /**
+ * Removes non-ASCII characters from the given string.
+ *
+ * @param string $string The input string to be cleaned.
+ * @return string The cleaned string with only ASCII characters.
+ */
+function sanitizeString(string $string): string
+{
+    return preg_replace('/[^(\x20-\x7F)]*/', '', $string);
+}
+
+/**
  * Get a numeric value from the query string for the specified key, or return the default value if not found or invalid.
  * 
  * @param string $key The key to retrieve from the query string
@@ -308,4 +329,17 @@ function calcEndIndex(int $pageNumber, int $totalRecords, int $itemsPerPage, int
     }
 
     return $totalRecords - $itemsPerPage * $pageNumber;
+}
+
+/**
+ * Generates the URL for a given page number.
+ *
+ * @param int $pageNumber The page number to generate the URL for.
+ * @param string $url The base URL to use.
+ * @return string The URL for the given page number.
+ */
+function generatePagerUrl(int $pageNumber, string $url): string
+{
+    $path = ($pageNumber === 1) ? '' : '/' . (string) $pageNumber;
+    return $url . $path;
 }

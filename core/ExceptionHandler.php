@@ -102,7 +102,7 @@ class ExceptionHandler
         }
 
         if (isset($_SERVER["REMOTE_ADDR"]) && isset($_SERVER['HTTP_USER_AGENT'])) {
-            $message .= ': ' . ($_SERVER["REMOTE_ADDR"] ?? '') . ': ' . ($_SERVER['HTTP_USER_AGENT'] ?? '');
+            $message .= ': ' . createUserLogStr();
         }
 
         $time = date('Y-m-d H:i:s') . ' ' . date_default_timezone_get() . ': ';
