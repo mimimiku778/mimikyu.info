@@ -72,21 +72,21 @@ class View
      */
     private static function sanitizeArray(array $array): array
     {
+        $sanitizedArray = [];
+
         foreach ($array as $key => $value) {
+            if (substr($key, 0, 2) === '__') {
+                $sanitizedArray[$key] = $value;
+                continue;
+            }
+
             if (is_array($value)) {
-                if (substr($key, 0, 2) !== '__') {
-                    $array[$key] = self::sanitizeArray($value);
-                } else {
-                    $array[$key] = $value;
-                }
+                $sanitizedArray[$key] = self::sanitizeArray($value);
             } else {
-                if (substr($key, 0, 2) !== '__') {
-                    $array[$key] = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
-                } else {
-                    $array[$key] = $value;
-                }
+                $sanitizedArray[$key] = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
             }
         }
-        return $array;
+
+        return $sanitizedArray;
     }
 }
