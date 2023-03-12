@@ -46,7 +46,7 @@ class Route
      * Route constructor.
      * Parses incoming request URI and calls corresponding controller method
      * 
-     * @param array ...$pathToQuery [optional] An array of paths to search for a match, with parameters enclosed in { }
+     * @param string ...$pathToQuery [optional] Paths to search for a match, with parameters enclosed in { }
      * @throws LogicException If the route has been started more than once.
      * @throws NotFoundException
      */
