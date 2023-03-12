@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @author mimimiku778 <0203.sub@gmail.com>
+ * @license https://github.com/mimimiku778/MimimalCMS/blob/master/LICENSE.md
+ */
+
 set_exception_handler('ExceptionHandler::handleException');
 
 /**

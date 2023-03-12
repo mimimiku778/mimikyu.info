@@ -161,7 +161,7 @@ class BoardPageController extends AbstractPageController
         $_SESSION['validPost'] = true;
 
         // 掲示板にリダイレクトする
-        redirect(self::PAGE_URL);
+        redirect(self::PAGE_URL, 303);
     }
 
     /**

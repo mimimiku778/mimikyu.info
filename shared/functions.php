@@ -3,6 +3,11 @@
 declare(strict_types=1);
 
 /**
+ * @author mimimiku778 <0203.sub@gmail.com>
+ * @license https://github.com/mimimiku778/MimimalCMS/blob/master/LICENSE.md
+ */
+
+/**
  * Check if the request is POST method.
  * 
  * @return bool Whether the request is POST method.
@@ -13,22 +18,26 @@ function isPostRequest(): bool
 }
 
 /**
- * Redirects the user to the specified URL using the specified HTTP response code.
+ * Redirects the user to the specified URL using the specified HTTP response code and exits.
  * 
- * @param string $url The URL to redirect to.
- * @param int $responseCode The HTTP response code to use. Defaults to 301.
+ * @param string $url           The URL to redirect to.
+ * @param int $responseCode     The HTTP response code to use. Defaults to 301.
+ * @param bool $exit            [optional] Whether to exit after sending the response. Default is true.
  */
-function redirect(string $url, int $responseCode = 301)
+function redirect(string $url, int $responseCode = 301, bool $exit = true)
 {
     header('Location: ' . $url, true, $responseCode);
+    if ($exit) {
+        exit;
+    }
 }
 
 /**
  * Returns HTTP status code and response in JSON format and exits.
  *
- * @param array $data The array to be returned as response.
- * @param ?int $responseCode [optional] HTTP status code
- * @param bool $exit [optional] Whether to exit after sending the response. Default is true.
+ * @param array $data           The array to be returned as response.
+ * @param ?int $responseCode    [optional] HTTP status code
+ * @param bool $exit            [optional] Whether to exit after sending the response. Default is true.
  */
 function jsonResponse(array $data, ?int $responseCode = null, bool $exit = true)
 {
@@ -125,14 +134,14 @@ function createUserLogStr(): string
 /**
  * Validate whether the specified key exists in the array and meets the specified string conditions.
  * 
- * @param array $array The array to be validated.
- * @param string $key The key to be validated.
- * @param int|null $maxLength [optional] The maximum length of the string.
- * @param string|null $exactMatch [optional] The string for exact matching.
- * @param string|null $e [optional] An Exception name to be thrown if validation fails.
- * @return bool Whether the validation passed or not.
- * @throws Exception If the specified key exists in the array but its value is invalid, 
- *      and an Exception was provided, it will be thrown.
+ * @param array $array             The array to be validated.
+ * @param string $key The          key to be validated.
+ * @param int|null $maxLength      [optional] The maximum length of the string.
+ * @param string|null $exactMatch  [optional] The string for exact matching.
+ * @param string|null $e           [optional] An Exception name to be thrown if validation fails.
+ * @return bool                    Whether the validation passed or not.
+ * @throws Exception               If the specified key exists in the array but its value is invalid, 
+ *                                 and an Exception was provided, it will be thrown.
  */
 function validateKeyStr(
     array $array,
@@ -189,15 +198,15 @@ function validateKeyStr(
 /**
  * Validate whether the specified key exists in the array and meets the specified numeric conditions.
  *
- * @param array $array The array to be validated
- * @param string $key The key to be validated
- * @param int|null $maxValue [optional] The maximum numeric value.
- * @param int|null $minValue [optional] The minimum numeric value.
- * @param int|null $exactMatch [optional] The numeric value for exact match.
- * @param string|null $e [optional] An Exception name to be thrown if validation fails.
- * @return bool Whether the validation passed or not.
- * @throws Exception If the specified key exists in the array but its value is invalid, 
- *      and an Exception was provided, it will be thrown.
+ * @param array $array          The array to be validated
+ * @param string $key           The key to be validated
+ * @param int|null $maxValue    [optional] The maximum numeric value.
+ * @param int|null $minValue    [optional] The minimum numeric value.
+ * @param int|null $exactMatch  [optional] The numeric value for exact match.
+ * @param string|null $e        [optional] An Exception name to be thrown if validation fails.
+ * @return bool                 Whether the validation passed or not.
+ * @throws Exception            If the specified key exists in the array but its value is invalid, 
+ *                              and an Exception was provided, it will be thrown.
  */
 function validateKeyNum(
     array $array,
@@ -250,7 +259,7 @@ function validateKeyNum(
  * Remove zero-width spaces from a string.
  *
  * @param string $str The input string.
- * @return string The input string without zero-width spaces.
+ * @return string     The input string without zero-width spaces.
  */
 function removeZWS(string $str): string
 {
@@ -272,9 +281,9 @@ function sanitizeString(string $string): string
 /**
  * Calculate offset for given page number and number of items per page.
  *
- * @param int $pageNumber The current page number.
- * @param int $numberOfItemsPerPage The number of items to display per page.
- * @return int The calculated offset.
+ * @param int $pageNumber            The current page number.
+ * @param int $numberOfItemsPerPage  The number of items to display per page.
+ * @return int                       The calculated offset.
  */
 function calcOffset(int $pageNumber, int $numberOfItemsPerPage): int
 {
@@ -285,9 +294,9 @@ function calcOffset(int $pageNumber, int $numberOfItemsPerPage): int
 /**
  * Get a numeric value from the query string for the specified key, or return the default value if not found or invalid.
  * 
- * @param string $key The key to retrieve from the query string
- * @param int $default The default numeric value to return if the key is not found or the value is invalid
- * @return int The retrieved numeric value, or the default value if not found or invalid
+ * @param string $key   The key to retrieve from the query string
+ * @param int $default  The default numeric value to return if the key is not found or the value is invalid
+ * @return int          The retrieved numeric value, or the default value if not found or invalid
  */
 function getQueryNum(string $queryKey, int $defaultValue): int
 {
@@ -298,9 +307,9 @@ function getQueryNum(string $queryKey, int $defaultValue): int
  * Calculates the maximum number of pages needed to display a set of records,
  * given the total number of records and the number of records to display per page.
  *
- * @param int $totalRecords The total number of records to display.
- * @param int $itemsPerPage The number of records to display per page.
- * @return int The maximum number of pages needed to display all the records.
+ * @param int $totalRecords  The total number of records to display.
+ * @param int $itemsPerPage  The number of records to display per page.
+ * @return int               The maximum number of pages needed to display all the records.
  */
 function calcMaxPages(int $totalRecords, int $recordsPerPage): int
 {
@@ -311,11 +320,11 @@ function calcMaxPages(int $totalRecords, int $recordsPerPage): int
  * Calculates the record index for the current page in descending order based on the given parameters.
  * If $maxPage is specified, it returns the ending index for the current page in descending order.
  * 
- * @param int $pageNumber The current page number.
- * @param int $totalRecords The total number of records.
- * @param int $itemsPerPage The number of items to display per page.
- * @param int|null $maxPage [optional] The total number of pages needed to display all records in descending order.
- * @return int The record index for the current page in descending order.
+ * @param int $pageNumber    The current page number.
+ * @param int $totalRecords  The total number of records.
+ * @param int $itemsPerPage  The number of items to display per page.
+ * @param int|null $maxPage  [optional] The total number of pages needed to display all records in descending order.
+ * @return int               The record index for the current page in descending order.
  */
 function calcDescRecordIndex(int $pageNumber, int $totalRecords, int $itemsPerPage, ?int $maxPage = null): int
 {
@@ -337,9 +346,9 @@ function calcDescRecordIndex(int $pageNumber, int $totalRecords, int $itemsPerPa
 /**
  * Generates the URL for a given page number.
  *
- * @param int $pageNumber The page number to generate the URL for.
- * @param string $url The base URL to use.
- * @return string The URL for the given page number.
+ * @param int $pageNumber  The page number to generate the URL for.
+ * @param string $url      The base URL to use.
+ * @return string          The URL for the given page number.
  */
 function genePagerUrl(int $pageNumber, string $url): string
 {

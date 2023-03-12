@@ -31,7 +31,6 @@
             <!-- CSRFトークンをセットする -->
             <?php csrfField() ?>
             <button type="submit" disabled>送信</button>
-
             <?php if ($v->isPosted) : ?>
                 <sup>投稿しました！</sup>
             <?php endif ?>
@@ -101,7 +100,7 @@
 
     ((el) => {
         if (!el) return
-        
+
         // selectを選択したときにvalueのURLに遷移する
         const select = qS('select', el)
         select.addEventListener('change', () => select.value && (location.href = select.value))
