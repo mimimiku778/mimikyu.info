@@ -20,7 +20,10 @@ class BoardModel
      */
     public function write(array $value)
     {
-        return DB::execute('INSERT INTO board (text, user) VALUES (:text, :user)', $value);
+        return DB::execute(
+            'INSERT INTO board (text, user) VALUES (:text, :user)',
+            $value
+        );
     }
 
     /**
