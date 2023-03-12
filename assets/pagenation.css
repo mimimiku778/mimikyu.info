@@ -72,12 +72,12 @@ body {
 
 .button01 a:hover {
     filter: none;
-    background-color: var(--transparent-secondary);
+    background-color: rgba(227, 246, 245, 0.9);
 }
 
 .button01.prev a:hover {
     filter: none;
-    background-color: var(--secondary);
+    background-color: rgba(227, 246, 245, 0.9);
 }
 
 .button01 a:focus {
@@ -89,12 +89,6 @@ body {
 .button01.prev a:focus {
     transition: 0.3ms;
     box-shadow: 0 0 0 0px rgba(0, 0, 0, 0);
-    background-color: var(--secondary);
-}
-
-.button01 a:active {
-    transition: 0.3ms;
-    background-color: var(--secondary);
 }
 
 .button01label {
@@ -167,7 +161,7 @@ body {
     -moz-appearance: none;
     appearance: none;
     left: 0;
-    top: 10px;
+    top: 0px;
 }
 
 .pager-sub .pager-select {
