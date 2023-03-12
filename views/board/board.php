@@ -97,7 +97,7 @@
         })
 
         // 一部環境でボタンの disabled が効かないので、追加の処理を入れる
-        el.addEventListener('submit', e => submit.disabled && event.preventDefault())
+        el.addEventListener('submit', e => submit.disabled && e.preventDefault())
     })(qS('.hitokoto-form'));
 
     ((el) => {
