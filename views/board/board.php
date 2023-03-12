@@ -87,15 +87,18 @@
 <script>
     ((el) => {
         if (!el) return
-        
-        const input = qS('input', el)
-        const submit = qS('[type="submit"]', el)
 
         // 入力に応じてボタンの disabled を切り替え
-        input.addEventListener('input', () => submit.disabled = !validateStringNotEmpty(input.value))
+        const input = qS('input', el)
+        const submit = qS('[type="submit"]', el)
+        input.addEventListener('input', () => {
+            submit.disabled = !validateStringNotEmpty(input.value)
+        })
 
         // 一部環境でボタンの disabled が効かないので、追加の処理を入れる
-        el.addEventListener('submit', e => submit.disabled && e.preventDefault())
+        el.addEventListener('submit', e => {
+            submit.disabled && e.preventDefault()
+        })
     })(qS('.hitokoto-form'));
 
     ((el) => {
@@ -103,6 +106,8 @@
 
         // selectを選択したときにvalueのURLに遷移する
         const select = qS('select', el)
-        select.addEventListener('change', () => select.value && (location.href = select.value))
+        select.addEventListener('change', () => {
+            select.value && (location.href = select.value)
+        })
     })(qS('.pager-select'));
 </script>
