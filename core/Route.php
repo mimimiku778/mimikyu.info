@@ -46,11 +46,11 @@ class Route
      * Route constructor.
      * Parses incoming request URI and calls corresponding controller method
      * 
-     * @param ?array $pathToQuery [optional] An array of paths to search for a match, with parameters enclosed in { }
+     * @param array ...$pathToQuery [optional] An array of paths to search for a match, with parameters enclosed in { }
      * @throws LogicException If the route has been started more than once.
      * @throws NotFoundException
      */
-    public static function run(?array $pathToQuery = null)
+    public static function run(...$pathToQuery)
     {
         if (!is_null(self::$path)) {
             throw new LogicException('Routing has been started multiple times.');
@@ -76,14 +76,14 @@ class Route
      * @return array An array include parsed path strings.
      * @throws NotFoundException
      */
-    private static function parseRequestUri(string $requestUri, ?array $pathToQuery): array
+    private static function parseRequestUri(string $requestUri, array $pathToQuery): array
     {
         // Remove leading and trailing slashes.
         $requestUri = preg_replace('#^/|/$#', '', $requestUri);
 
         // Matchs requestUri to pathToQuery and update $_GET and $path variables.
         $path = null;
-        if (!is_null($pathToQuery)) {
+        if ($pathToQuery !== []) {
             $matchResult = self::matchPath($requestUri, $pathToQuery);
 
             if ($matchResult !== false) {
