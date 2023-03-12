@@ -68,7 +68,12 @@ class BoardPageController extends AbstractPageController
         // 投稿した後であるか
         $val->isPosted = getRemoveSessionValue('validPost');
 
-        // ビューに渡す
+        /** ビューに渡す
+         *      オブジェクトか連想配列のみを渡せます。（それ以外は InvalidArgumentException が投げられます）
+         *      連想配列の場合はテンプレートの中で Key = 変数名 になって展開されます。
+         *      オブジェクトの場合は $v で渡されます。
+         *      文字列はすべてサニタイズされます。key・プロパティ名の頭が "__" で始まる場合はサニタイズされません。
+         */
         View::render('header', ['title' => 'ひとこと掲示板']);
         View::render('board/board', $val);
         View::render('footer');
