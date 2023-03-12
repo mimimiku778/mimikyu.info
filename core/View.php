@@ -40,11 +40,6 @@ class View
      */
     public static function get(string $viewTemplateFile, array|object|null $valuesArray = null): string
     {
-        if (ob_get_length() !== false) {
-            self::$renderCache .= ob_get_clean();
-            ob_clean();
-        }
-
         if ($valuesArray !== null) {
             if (is_array($valuesArray) && array_values($valuesArray) === $valuesArray) {
                 throw new InvalidArgumentException('The passed array must be an associative array.');
