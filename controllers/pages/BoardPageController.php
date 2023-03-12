@@ -43,13 +43,22 @@ class BoardPageController extends AbstractPageController
         }
 
         // ページネーションのselect要素を取得する
-        [$val->__select, $val->__label] = $this->selectPagenation($val->pageNumber, $totalRecords, self::NUMBER_ITEMS, $val->maxPage, self::PAGE_URL);
+        // NOTE: Keyの頭が__で始まる場合はサニタイズ処理を通しません
+        [$val->__select, $val->__label] = $this->selectPagenation(
+            $val->pageNumber,
+            $totalRecords,
+            self::NUMBER_ITEMS,
+            $val->maxPage,
+            self::PAGE_URL
+        );
 
         // ビューに渡すページネーションのURL
         $val->url = fn ($n) => genePagerUrl($n, self::PAGE_URL);
 
         // 投稿リストを取得する
-        $val->posts = $this->model->get(['offset' => calcOffset($val->pageNumber, self::NUMBER_ITEMS), 'limit' => self::NUMBER_ITEMS]);
+        $val->posts = $this->model->get(
+            ['offset' => calcOffset($val->pageNumber, self::NUMBER_ITEMS), 'limit' => self::NUMBER_ITEMS]
+        );
 
         // 日付の形式を変換する
         foreach ($val->posts as &$post) {
@@ -61,7 +70,6 @@ class BoardPageController extends AbstractPageController
 
         // ビューに渡す
         View::render('header', ['title' => 'ひとこと掲示板']);
-        // NOTE: Keyの頭が__で始まる場合はサニタイズ処理を通しません
         View::render('board/board', $val);
         View::render('footer');
         View::display();
