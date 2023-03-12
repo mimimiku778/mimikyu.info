@@ -35,8 +35,6 @@ class BoardModel
         //)->fetchColumn();
 
         // もっと速い方法は無いだろうか…。
-        return (int) DB::execute(
-            'SELECT count(*) FROM board'
-        )->fetchColumn();
+        return (int) DB::execute('SELECT count(*) FROM board')->fetchColumn();
     }
 }
