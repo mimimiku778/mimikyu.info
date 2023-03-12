@@ -4,22 +4,24 @@
  */
 
 /**
- * Shorthand function for document.querySelector, which returns the first matching element within the document.
+ * A shorthand function for `document.querySelector`, which returns the first matching element within a given element or the document.
  *
  * @function qS
  * @param {string} selector - The selector to use for finding the element.
- * @returns {Element|null} - The first matching element, or null if none is found.
+ * @param {Element=} element - The element within which to search for the selector. Defaults to `document`.
+ * @returns {?Element} - The first matching element, or null if none is found.
  */
-const qS = document.querySelector.bind(document)
+const qS = (s, element = document) => element.querySelector(s)
 
 /**
- * Shorthand function for document.querySelectorAll, which returns a NodeList of all matching elements within the document.
+ * A shorthand function for `document.querySelectorAll`, which returns a NodeList of all matching elements within a given element or the document.
  *
  * @function qSA
  * @param {string} selector - The selector to use for finding the elements.
- * @returns {NodeList} - A NodeList of all matching elements.
+ * @param {Element=} element - The element within which to search for the selector. Defaults to `document`.
+ * @returns {!NodeList} - A NodeList of all matching elements.
  */
-const qSA = document.querySelectorAll.bind(document)
+const qSA = (s, element = document) => element.querySelectorAll(s)
 
 /**
  * Finds an element by its ID.
@@ -30,26 +32,16 @@ const qSA = document.querySelectorAll.bind(document)
 const byId = id => document.getElementById(id)
 
 /**
- * Adds a click event listener to an element, if it exists.
- *
- * @param {Element|null} element - The element to add the listener to.
- * @param {Function} callback - The function to execute when the element is clicked.
- */
-const addClick = (element, callback) => element && element.addEventListener('click', callback)
-
-/**
- * Enables/disables a button based on the input field value.
+ * Validates if a string is not empty or only contains white space.
  * 
- * @param {HTMLInputElement} input - The input field element.
- * @param {HTMLButtonElement} button - The button element to enable/disable.
+ * @param {string} str - The string to validate.
+ * @returns {boolean} - Returns true if the string is not empty and does not only contain white space, false otherwise.
  */
-const toggleButtonByInputValue = (input, button) => {
-  input.addEventListener('input', () => {
-    const normalizedStr = input.value.normalize('NFKC');
-    const string = normalizedStr.replace(/[\u200B-\u200D\uFEFF]/g, '');
-    button.disabled = string.trim() === '';
-  });
-};
+const validateStringNotEmpty = str => {
+  const normalizedStr = str.normalize('NFKC')
+  const string = normalizedStr.replace(/[\u200B-\u200D\uFEFF]/g, '')
+  return string.trim() !== ''
+}
 
 /**
  * Sends a POST request to the specified URL with form data.

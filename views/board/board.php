@@ -22,7 +22,7 @@
         </header>
 
         <!-- 送信フォーム -->
-        <form action="/board" method="POST" id="hitokoto-form">
+        <form class="hitokoto-form" action="/board" method="POST">
             <label for="hitokoto">
                 <h2>なにかひとこと:</h2>
             </label>
@@ -30,7 +30,7 @@
 
             <!-- CSRFトークンをセットする -->
             <?php csrfField() ?>
-            <button id="submit" type="submit" disabled>送信</button>
+            <button type="submit" disabled>送信</button>
 
             <?php if ($v->isPosted) : ?>
                 <sup>投稿しました！</sup>
@@ -86,25 +86,22 @@
 </main>
 <script src="/js/functions.js"></script>
 <script>
-    // 入力に応じてボタンの disabled を切り替え
-    const submitBtn = byId('submit')
-    const input = byId('hitokoto')
-    toggleButtonByInputValue(input, submitBtn)
-
-    // 一部環境でボタンの disabled が効かないので、追加の処理を入れる
-    const form = byId('hitokoto-form')
-    form.addEventListener('submit', e => {
-        if (submitBtn.disabled) {
-            event.preventDefault()
-        }
-    });
-
     ((el) => {
         if (!el) return
 
-        // ページ読み込み後にselect要素の選択をリセット
-        window.addEventListener('pageshow', () => qS('form', el).reset())
+        const input = qS('input', el)
+        const submit = qS('[type="submit"]', el)
 
+        // 入力に応じてボタンの disabled を切り替え
+        input.addEventListener('input', () => submit.disabled = !validateStringNotEmpty(input.value))
+
+        // 一部環境でボタンの disabled が効かないので、追加の処理を入れる
+        el.addEventListener('submit', e => submit.disabled && event.preventDefault());
+    })(qS('.hitokoto-form'));
+
+    ((el) => {
+        if (!el) return
+        
         // selectを選択したときにvalueのURLに遷移する
         const select = qS('select', el)
         select.addEventListener('change', () => select.value && (location.href = select.value))
