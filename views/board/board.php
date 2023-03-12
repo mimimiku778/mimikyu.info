@@ -105,7 +105,7 @@
         // ページ読み込み後にselect要素の選択をリセット
         window.addEventListener('pageshow', () => qS('form', el).reset())
 
-        // ページ読み込み後にselect要素の選択をリセット
+        // selectを選択したときにvalueのURLに遷移する
         const select = qS('select', el)
         select.addEventListener('change', () => select.value && (location.href = select.value))
     })(qS('.pager-select'));
