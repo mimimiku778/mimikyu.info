@@ -50,7 +50,7 @@ class Route
      * @throws LogicException If the route has been started more than once.
      * @throws NotFoundException
      */
-    public static function run(...$pathToQuery)
+    public static function run(string ...$pathToQuery)
     {
         if (!is_null(self::$path)) {
             throw new LogicException('Routing has been started multiple times.');
