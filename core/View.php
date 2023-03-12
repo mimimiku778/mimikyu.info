@@ -7,11 +7,8 @@ declare(strict_types=1);
  */
 class View
 {
-    /**
-     * Rendered content cache.
-     *
-     * @var string
-     */
+    private const OBJECT_NAME = 'obj';
+
     private static string $renderCache = '';
 
     /**
@@ -42,15 +39,22 @@ class View
      */
     public static function get(string $viewTemplateFile, array|object|null $valuesArray = null): string
     {
+        if (ob_get_length() !== false) {
+            self::$renderCache .= ob_get_clean();
+            ob_clean();
+        }
+
         if ($valuesArray !== null) {
             if (is_array($valuesArray) && array_values($valuesArray) === $valuesArray) {
                 throw new InvalidArgumentException('The passed array must be an associative array.');
             }
 
             $sanitizedValues = self::sanitizeArray($valuesArray);
-
             if (is_array($sanitizedValues)) {
                 extract($sanitizedValues);
+            } else {
+                $OBJECT_NAME = self::OBJECT_NAME;
+                $$OBJECT_NAME = $sanitizedValues;
             }
         }
 

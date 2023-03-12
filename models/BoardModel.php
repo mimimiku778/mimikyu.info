@@ -28,8 +28,12 @@ class BoardModel
      */
     public function getRecordCount(): int
     {
+        //return (int) DB::execute(
+        //    'SELECT TABLE_ROWS FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = "board"'
+        //)->fetchColumn();
+
         return (int) DB::execute(
-            'SELECT TABLE_ROWS FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = "board"'
+            'SELECT count(*) FROM board'
         )->fetchColumn();
     }
 }

@@ -6,9 +6,11 @@ abstract class AbstractPageController
 {
     public function __construct()
     {
-        ini_set('session.cookie_secure', 1);
-        ini_set('session.cookie_httponly', 1);
-        ini_set('session.gc_maxlifetime', 30 * 60);
+        session_set_cookie_params([
+            'secure' => true,
+            'httponly' => true,
+            'samesite' => 'Lax',
+        ]);
         session_start();
     }
 
