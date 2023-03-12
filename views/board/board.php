@@ -22,7 +22,7 @@
         </header>
 
         <!-- 送信フォーム -->
-        <form action="/board" method="POST">
+        <form action="/board" method="POST" id="hitokoto-form">
             <label for="hitokoto">
                 <h2>なにかひとこと:</h2>
             </label>
@@ -86,11 +86,26 @@
 </main>
 <script src="/js/functions.js"></script>
 <script>
-    toggleButtonByInputValue(byId('hitokoto'), byId('submit'));
+    // 入力に応じてボタンの disabled を切り替え
+    const submitBtn = byId('submit')
+    const input = byId('hitokoto')
+    toggleButtonByInputValue(input, submitBtn)
+
+    // 一部環境でボタンの disabled が効かないので、追加の処理を入れる
+    const form = byId('hitokoto-form')
+    form.addEventListener('submit', e => {
+        if (submitBtn.disabled) {
+            event.preventDefault()
+        }
+    });
 
     ((el) => {
         if (!el) return
+
+        // ページ読み込み後にselect要素の選択をリセット
         window.addEventListener('pageshow', () => qS('form', el).reset())
+
+        // ページ読み込み後にselect要素の選択をリセット
         const select = qS('select', el)
         select.addEventListener('change', () => select.value && (location.href = select.value))
     })(qS('.pager-select'));
