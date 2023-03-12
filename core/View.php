@@ -7,7 +7,7 @@ declare(strict_types=1);
  */
 class View
 {
-    private const OBJECT_NAME = 'obj';
+    private const OBJECT_NAME = 'v';
 
     private static string $renderCache = '';
 
