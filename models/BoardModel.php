@@ -34,7 +34,6 @@ class BoardModel
         //    'SELECT TABLE_ROWS FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = "board"'
         //)->fetchColumn();
 
-        // もっと速い方法は無いだろうか…。
         return (int) DB::execute('SELECT count(*) FROM board')->fetchColumn();
     }
 }
