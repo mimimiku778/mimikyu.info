@@ -44,6 +44,18 @@ const validateStringNotEmpty = str => {
 }
 
 /**
+ * Remove zero-width spaces from a string.
+ *
+ * @param string $str The input string.
+ * @return string     The input string without zero-width spaces.
+ */
+const removeZWS = str => {
+  const normalizedStr = str.normalize('NFKC')
+  const string = normalizedStr.replace(/[\u200B-\u200D\uFEFF]/g, '')
+  return string
+}
+
+/**
  * Sends a POST request to the specified URL with form data.
  *
  * @param {string} url - The URL to send the request to.

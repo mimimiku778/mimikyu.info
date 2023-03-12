@@ -155,7 +155,7 @@ class BoardPageController extends AbstractPageController
         $this->validatePostRequest();
 
         // 投稿をデータベースに書き込む
-        $this->model->write(['text' => removeZWS($_POST['text']), 'user' => createUserLogStr()]);
+        $this->model->write(['text' => Normalizer::normalize($_POST['text']), 'user' => createUserLogStr()]);
 
         // 投稿があったフラグをセッションにいれる
         $_SESSION['validPost'] = true;

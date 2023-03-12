@@ -92,10 +92,12 @@
         const submit = qS('[type="submit"]', el)
 
         // 入力に応じてボタンの disabled を切り替え
-        input.addEventListener('input', () => submit.disabled = !validateStringNotEmpty(input.value))
+        input.addEventListener('input', () => {
+            submit.disabled = !validateStringNotEmpty(input.value)
+        })
 
         // 一部環境でボタンの disabled が効かないので、追加の処理を入れる
-        el.addEventListener('submit', e => submit.disabled && event.preventDefault());
+        el.addEventListener('submit', e => submit.disabled && event.preventDefault())
     })(qS('.hitokoto-form'));
 
     ((el) => {
