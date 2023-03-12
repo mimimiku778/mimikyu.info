@@ -14,14 +14,12 @@ class SimpleAutoloader
 {
     public static function load(string $className)
     {
-        // Match the subdirectory name with the namespace name.
         $classFile = str_replace('\\', '/', ltrim($className, '\\')) . '.php';
-
-        // Search for the class file in each root directory.
-        foreach (SIMPLE_AUTOLOADER_ROOT_DIRECTORY_NAMES as $rootDirectoryName) {
-            $classFilePath = __DIR__ . '/../' . $rootDirectoryName . '/' . $classFile;
-            if (file_exists($classFilePath)) {
-                require_once $classFilePath;
+        foreach (SIMPLE_AUTOLOADER_ROOT_DIRECTORY_NAMES as $rootDir) {
+            $classPath = __DIR__ . '/../' . $rootDir . '/' . $classFile;
+            if (file_exists($classPath)) {
+                require $classPath;
+                return;
             }
         }
     }
