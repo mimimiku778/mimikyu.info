@@ -64,7 +64,7 @@ function csrfField()
     $token = bin2hex(random_bytes(16));
 
     // Save the token to the session.
-    $_SESSION['_csrf'] = $token;
+    $_SESSION['_csrf'] = hash('sha256', $token);
 
     // Output an HTML input element containing the token.
     echo '<input type="hidden" name="_csrf" value="' . $token . '" />';
@@ -92,7 +92,7 @@ function verifyCsrfToken(): bool
     }
 
     // Verify that the CSRF token in the request matches the token in the session.
-    return $_POST['_csrf'] === $sessionToken;
+    return hash_equals($sessionToken, hash('sha256', $_POST['_csrf']));
 }
 
 /**
@@ -289,7 +289,7 @@ function calcOffset(int $pageNumber, int $numberOfItemsPerPage): int
  * @param int $default The default numeric value to return if the key is not found or the value is invalid
  * @return int The retrieved numeric value, or the default value if not found or invalid
  */
-function getQueryNumValue(string $queryKey, int $defaultValue): int
+function getQueryNum(string $queryKey, int $defaultValue): int
 {
     return (int) ($_GET[$queryKey] ?? $defaultValue);
 }
@@ -341,8 +341,8 @@ function calcDescRecordIndex(int $pageNumber, int $totalRecords, int $itemsPerPa
  * @param string $url The base URL to use.
  * @return string The URL for the given page number.
  */
-function generatePagerUrl(int $pageNumber, string $url): string
+function genePagerUrl(int $pageNumber, string $url): string
 {
-    $path = ($pageNumber === 1) ? '' : '/' . (string) $pageNumber;
+    $path = ($pageNumber > 1) ? '/' . (string) $pageNumber : '';
     return $url . $path;
 }

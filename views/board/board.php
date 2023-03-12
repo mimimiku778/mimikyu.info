@@ -1,3 +1,4 @@
+<?php $val = $sanitizedValues ?>
 <main>
     <section>
         <header>
@@ -32,21 +33,21 @@
             <?php csrfField() ?>
             <button id="submit" type="submit" disabled>送信</button>
 
-            <?php if ($__isPosted) : ?>
+            <?php if ($val->isPosted) : ?>
                 <sup>投稿しました！</sup>
             <?php endif ?>
         </form>
     </section>
 
     <!-- select要素ページネーション -->
-    <?php if ($__pager['maxPage'] > 1) : ?>
+    <?php if ($val->maxPage > 1) : ?>
         <section>
             <div class="pager-select" ontouchstart>
                 <form>
                     <select id="selectPager">
-                        <?php echo $__selectPager[0] ?>
+                        <?php echo $val->__select ?>
                     </select>
-                    <label for="selectPager"><?php echo $__selectPager[1] ?></span></label>
+                    <label for="selectPager"><?php echo $val->__label ?></span></label>
                 </form>
             </div>
         </section>
@@ -54,7 +55,7 @@
 
     <!-- 投稿リスト -->
     <section>
-        <?php foreach ($posts as $post) : ?>
+        <?php foreach ($val->posts as $post) : ?>
             <article>
                 <aside>
                     <small><?php echo $post['id'] ?>. <?php echo $post['time'] ?></small>
@@ -65,19 +66,19 @@
     </section>
 
     <!-- 次のページ・前のページボタン -->
-    <?php if ($__pager['maxPage'] > 1) : ?>
+    <?php if ($val->maxPage > 1) : ?>
         <nav class="search-pager">
-            <?php if ($__pager['pageNumber'] > 1) : ?>
+            <?php if ($val->pageNumber > 1) : ?>
                 <div class="button01 prev" ontouchstart>
-                    <a href="<?php echo generatePagerUrl($__pager['pageNumber'] - 1, $__pager['url']) ?>"><?php echo $__pager['pageNumber'] - 1 ?>ページへ</a>
+                    <a href="<?php echo ($val->url)($val->pageNumber - 1) ?>"><?php echo $val->pageNumber - 1 ?>ページへ</a>
                 </div>
             <?php endif ?>
 
-            <span class="button01label"><?php echo $__pager['pageNumber'] . ' / ' . $__pager['maxPage'] ?></span>
+            <span class="button01label"><?php echo $val->pageNumber . ' / ' . $val->maxPage ?></span>
 
-            <?php if ($__pager['pageNumber'] < $__pager['maxPage']) : ?>
+            <?php if ($val->pageNumber < $val->maxPage) : ?>
                 <div class="button01 next" ontouchstart>
-                    <a href="<?php echo generatePagerUrl($__pager['pageNumber'] + 1, $__pager['url']) ?>">次のページへ</a>
+                    <a href="<?php echo ($val->url)($val->pageNumber + 1) ?>">次のページへ</a>
                 </div>
             <?php endif ?>
         </nav>

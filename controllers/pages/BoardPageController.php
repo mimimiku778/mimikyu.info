@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class BoardPageController extends AbstractPageController
 {
     private const NUMBER_ITEMS = 10;
@@ -26,39 +28,43 @@ class BoardPageController extends AbstractPageController
         // レコード数を取得する
         $totalRecords = $this->model->getRecordCount();
 
+        // ビューに渡す値のオブジェクト
+        $val = new stdClass();
+
         // ページの最大数を計算する
-        $maxPage = calcMaxPages($totalRecords, self::NUMBER_ITEMS);
+        $val->maxPage = calcMaxPages($totalRecords, self::NUMBER_ITEMS);
 
         // リクエストのページ番号を取得する
-        $pageNumber = getQueryNumValue('page', 1);
+        $val->pageNumber = getQueryNum('page', 1);
 
         // リクエストのページ番号が最大ページ数を超える場合はリダイレクト
-        if ($pageNumber > $maxPage) {
+        if ($val->pageNumber > $val->maxPage) {
             redirect(self::PAGE_URL);
         }
 
         // ページネーションのselect要素を取得する
-        $__selectPager = $this->selectPagenation($pageNumber, $totalRecords, self::NUMBER_ITEMS, $maxPage, self::PAGE_URL);
+        [$val->__select, $val->__label] = $this->selectPagenation($val->pageNumber, $totalRecords, self::NUMBER_ITEMS, $val->maxPage, self::PAGE_URL);
 
-        // ビューに渡すページネーションの値
-        $__pager = compact('maxPage', 'pageNumber') + ['url' => self::PAGE_URL];
+        // ビューに渡すページネーションのURL
+        $val->url = fn ($n) => genePagerUrl($n, self::PAGE_URL);
 
         // 投稿リストを取得する
-        $posts = $this->model->get(['offset' => calcOffset($pageNumber, self::NUMBER_ITEMS), 'limit' => self::NUMBER_ITEMS]);
+        $val->posts = $this->model->get(['offset' => calcOffset($val->pageNumber, self::NUMBER_ITEMS), 'limit' => self::NUMBER_ITEMS]);
 
         // 日付の形式を変換する
-        foreach ($posts as &$post) {
+        foreach ($val->posts as &$post) {
             $post['time'] = $this->getDateTimeFormatted($post['time']);
         }
 
         // 投稿した後であるか
-        $__isPosted = getRemoveSessionValue('validPost');
+        $val->isPosted = getRemoveSessionValue('validPost');
 
         // ビューに渡す
         View::render('header', ['title' => 'ひとこと掲示板']);
         // NOTE: Keyの頭が__で始まる場合はサニタイズ処理を通しません
-        View::render('board/board',  compact('posts', '__isPosted', '__pager', '__selectPager'));
+        View::render('board/board', $val);
         View::render('footer');
+        View::display();
     }
 
     /**
@@ -81,6 +87,8 @@ class BoardPageController extends AbstractPageController
 
     /**
      * 降順ページネーションのselect要素を生成
+     * 
+     * @return array [$selectElement, $label]
      */
     private function selectPagenation(int $pageNumber, int $totalRecords, int $itemsPerPage, int $maxPage, string $url): array
     {
@@ -99,7 +107,7 @@ class BoardPageController extends AbstractPageController
         // 各ページ番号の要素を生成する
         $selectElement = '';
         for ($i = 1; $i <= $maxPage; $i++) {
-            $selectElement .= $getElement(generatePagerUrl($i, $url), $selected($i), $startNum($i), $endNum($i), $i) . "\n";
+            $selectElement .= $getElement(genePagerUrl($i, $url), $selected($i), $startNum($i), $endNum($i), $i) . "\n";
         }
 
         // ラベルの番号を取得する

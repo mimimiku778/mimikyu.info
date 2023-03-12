@@ -7,5 +7,6 @@ class IndexPageController extends AbstractPageController
         View::render('header', ['title' => 'ふわふわポートフォリオ😵']);
         View::render('toppage');
         View::render('footer');
+        View::display();
     }
 }

@@ -10,7 +10,6 @@ abstract class AbstractPageController
         ini_set('session.cookie_httponly', 1);
         ini_set('session.gc_maxlifetime', 30 * 60);
         session_start();
-        register_shutdown_function(fn () => View::display());
     }
 
     abstract protected function index();
