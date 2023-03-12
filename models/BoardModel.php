@@ -16,11 +16,10 @@ class BoardModel
 
     /**
      * @param array $value `['text' => , 'user' => ]`
-     * @return int Row count
      */
     public function write(array $value)
     {
-        return DB::execute(
+        DB::execute(
             'INSERT INTO board (text, user) VALUES (:text, :user)',
             $value
         );
