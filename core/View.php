@@ -7,8 +7,6 @@ declare(strict_types=1);
  */
 class View
 {
-    private const OBJECT_NAME = 'v';
-
     private static string $renderCache = '';
 
     /**
@@ -53,7 +51,7 @@ class View
             if (is_array($sanitizedValues)) {
                 extract($sanitizedValues);
             } else {
-                $OBJECT_NAME = self::OBJECT_NAME;
+                $OBJECT_NAME = VIEW_OBJECT_NAME;
                 $$OBJECT_NAME = $sanitizedValues;
             }
         }
