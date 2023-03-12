@@ -1,7 +1,7 @@
 RewriteEngine On
 
 # Redirect all non-www and non-https requests to https://mimikyu.info
-RewriteCond %{HTTPS} off [OR]
+#RewriteCond %{HTTPS} off [OR]
 RewriteCond %{HTTP_HOST} ^www\.mimikyu\.info [NC]
 RewriteRule ^(.*)$ https://mimikyu.info/$1 [L,R=301]
 
