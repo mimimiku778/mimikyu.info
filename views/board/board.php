@@ -39,12 +39,12 @@
     <section>
         <!-- select要素ページネーション -->
         <?php if ($v->maxPage > 1) : ?>
-            <nav class="pager-select">
+            <nav class="page-select">
                 <form>
-                    <select id="selectPager">
+                    <select id="page-selector">
                         <?php echo $v->__select ?>
                     </select>
-                    <label for="selectPager"><?php echo $v->__label ?></span></label>
+                    <label for="page-selector"><?php echo $v->__label ?></span></label>
                 </form>
             </nav>
         <?php endif ?>
@@ -105,5 +105,5 @@
         select.addEventListener('change', () => {
             select.value && (location.href = select.value)
         })
-    })(qS('.pager-select'));
+    })(qS('.page-select'));
 </script>
