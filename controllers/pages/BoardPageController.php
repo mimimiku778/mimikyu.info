@@ -155,7 +155,13 @@ class BoardPageController extends AbstractPageController
         $this->validatePostRequest();
 
         // 投稿をデータベースに書き込む
-        $this->model->write(['text' => Normalizer::normalize($_POST['text']), 'user' => createUserLogStr()]);
+        $this->model->write(
+            [
+                'text' => Normalizer::normalize($_POST['text']),
+                'ip' => ($_SERVER["REMOTE_ADDR"] ?? 'null'),
+                'ua' => createUserLogStr()
+            ]
+        );
 
         // 投稿があったフラグをセッションにいれる
         $_SESSION['validPost'] = true;
@@ -169,7 +175,8 @@ class BoardPageController extends AbstractPageController
      * 
      * @throws ValidationException CSRFトークンが無効な場合
      * @throws InvalidInputException 投稿の文字列が無効な場合
-     *      上記の Exception は ExceptionHandler で捕捉されて、400 Bad requestを返すようになっています。
+     *          上記の Exception は ExceptionHandler で捕捉されて、400 Bad requestを返すようになっています。
+     * @throws ThrottleRequestsException
      */
     private function validatePostRequest()
     {
@@ -181,6 +188,11 @@ class BoardPageController extends AbstractPageController
         // 送られてきた文字列が「存在する」、「空か空白スペースのみでない」、「100文字以下」であるか
         if (!validateKeyStr($_POST, 'text', 100)) {
             throw new InvalidInputException('無効な文字列');
+        }
+
+        // 連投を検出する
+        if (!$this->model->limitInterval()) {
+            throw new ThrottleRequestsException();
         }
     }
 }

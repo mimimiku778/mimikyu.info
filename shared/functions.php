@@ -69,8 +69,6 @@ function isJsonRequest(): bool
  */
 function csrfField()
 {
-    session_regenerate_id(true);
-    
     // Generate a random 16-byte token.
     $token = bin2hex(random_bytes(16));
 
@@ -130,7 +128,7 @@ function getRemoveSessionValue(string $name): mixed
  */
 function createUserLogStr(): string
 {
-    return preg_replace('/[^(\x20-\x7F)]*/', '', ($_SERVER["REMOTE_ADDR"] ?? '') . ': ' . ($_SERVER['HTTP_USER_AGENT'] ?? ''));
+    return preg_replace('/[^(\x20-\x7F)]*/', '',  ($_SERVER['HTTP_USER_AGENT'] ?? 'null'));
 }
 
 /**

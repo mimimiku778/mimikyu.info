@@ -26,6 +26,11 @@ class ExceptionHandler
             return;
         }
 
+        if ($exception instanceof ThrottleRequestsException) {
+            self::manyRequests();
+            return;
+        }
+
         if ($exception instanceof BadRequestException) {
             self::badRequest();
             self::errorLog($exception);
@@ -61,7 +66,21 @@ class ExceptionHandler
             jsonResponse(['error' => '404 Not Found']);
         }
 
-        echo '404 Not Found <br>';
+        echo '404 Not Found<br>';
+    }
+
+    /**
+     * Handles a NotFoundException by returning a 404 error response.
+     */
+    public static function manyRequests()
+    {
+        http_response_code(429);
+
+        if (isJsonRequest()) {
+            jsonResponse(['error' => '429 Too Many Requests']);
+        }
+
+        echo '429 Too Many Requests<br>';
     }
 
     /**
@@ -75,7 +94,7 @@ class ExceptionHandler
             jsonResponse(['error' => '400 Bad Request']);
         }
 
-        echo '400 Bad Request <br>';
+        echo '400 Bad Request<br>';
     }
 
     public static function internalServerError()
@@ -86,7 +105,7 @@ class ExceptionHandler
             jsonResponse(['error' => '500 Internal Server Error'], exit: false);
         }
 
-        echo '500 Internal Server Error <br>';
+        echo '500 Internal Server Error<br>';
     }
 
     /**

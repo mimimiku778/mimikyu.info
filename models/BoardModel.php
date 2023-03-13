@@ -20,7 +20,7 @@ class BoardModel
     public function write(array $value)
     {
         DB::execute(
-            'INSERT INTO board (text, user) VALUES (:text, :user)',
+            'INSERT INTO board (text, ip, ua) VALUES (:text, :ip, :ua)',
             $value
         );
     }
@@ -35,5 +35,17 @@ class BoardModel
         //)->fetchColumn();
 
         return (int) DB::execute('SELECT count(*) FROM board')->fetchColumn();
+    }
+
+    public function limitInterval(): bool
+    {
+        $query = 'SELECT COUNT(*) FROM board WHERE ip = :ip AND time > DATE_SUB(NOW(), INTERVAL :interval MINUTE)';
+
+        $requestCount = (int) DB::execute(
+            $query,
+            ['ip' => ($_SERVER["REMOTE_ADDR"] ?? ''), 'interval' => DatabaseConfig::BOARD_INTERVAL]
+        )->fetchColumn();
+
+        return $requestCount < DatabaseConfig::BOARD_MAX_REQUESTS;
     }
 }

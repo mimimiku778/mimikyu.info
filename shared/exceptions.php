@@ -4,6 +4,10 @@ class NotFoundException extends RuntimeException
 {
 }
 
+class ThrottleRequestsException extends RuntimeException
+{
+}
+
 class BadRequestException extends RuntimeException
 {
 }
