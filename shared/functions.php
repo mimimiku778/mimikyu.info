@@ -69,6 +69,8 @@ function isJsonRequest(): bool
  */
 function csrfField()
 {
+    session_regenerate_id(true);
+    
     // Generate a random 16-byte token.
     $token = bin2hex(random_bytes(16));
 
