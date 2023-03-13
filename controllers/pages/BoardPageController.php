@@ -14,6 +14,8 @@ class BoardPageController extends AbstractPageController
      */
     public function index()
     {
+        session_regenerate_id(true);
+
         // 掲示板のモデル
         $this->model = new BoardModel;
 
