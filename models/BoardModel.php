@@ -15,7 +15,7 @@ class BoardModel
     }
 
     /**
-     * @param array $value `['text' => , 'user' => ]`
+     * @param array $value `['text' => , 'ip' => , 'ua' => ]`
      */
     public function write(array $value)
     {
