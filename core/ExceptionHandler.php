@@ -28,7 +28,7 @@ class ExceptionHandler
 
         if ($exception instanceof ThrottleRequestsException) {
             self::manyRequests();
-            return;
+            self::errorLog($exception);
         }
 
         if ($exception instanceof BadRequestException) {
@@ -126,7 +126,7 @@ class ExceptionHandler
         }
 
         if (isset($_SERVER["REMOTE_ADDR"]) && isset($_SERVER['HTTP_USER_AGENT'])) {
-            $message .= ': ' . createUserLogStr();
+            $message .= ': ' . $_SERVER["REMOTE_ADDR"] . ': ' . createUserLogStr();
         }
 
         $time = date('Y-m-d H:i:s') . ' ' . date_default_timezone_get() . ': ';

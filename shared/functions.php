@@ -122,13 +122,15 @@ function getRemoveSessionValue(string $name): mixed
 }
 
 /**
- * Create a log message from the user's IP address and user agent.
+ * Create a log message from the user agent.
  * 
- * @return string The log message in the format "IP Address: User Agent".
+ * @return string User Agent.
  */
 function createUserLogStr(): string
 {
-    return preg_replace('/[^(\x20-\x7F)]*/', '',  ($_SERVER['HTTP_USER_AGENT'] ?? 'null'));
+    $string = preg_replace('/[^(\x20-\x7F)]*/', '', ($_SERVER['HTTP_USER_AGENT'] ?? 'null'));
+
+    return substr($string, 0, 512);
 }
 
 /**
