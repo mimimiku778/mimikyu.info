@@ -189,8 +189,7 @@ class BoardPageController extends AbstractPageController
         if (!validateKeyStr($_POST, 'text', 100)) {
             throw new InvalidInputException('無効な文字列');
         }
-
-        // 連投を検出する
+        
         if (!$this->model->limitInterval()) {
             throw new ThrottleRequestsException();
         }
