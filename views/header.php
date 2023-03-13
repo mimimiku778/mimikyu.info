@@ -8,7 +8,13 @@
     <title><?php echo $title ?></title>
     <meta name="description" content="わたしの個人的なWEB開発のポートフォリオとソースコードを公開しているので、ぜひチェックしてみてくださいね！メインはJavaScriptとPHPでがんばっています♪ 細かいところまでこだわっているので、ぜひ見てみてください！" />
     <link rel="stylesheet" href="/../assets/mvp.css">
-    <link rel="stylesheet" href="/../assets/pagenation.css">
+
+    <?php if (isset($__css)) : ?>
+        <?php foreach ($__css as $css) : ?>
+            <?php echo '<link rel="stylesheet" href="/../assets/' . $css . '.css">' ?>
+        <?php endforeach ?>
+    <?php endif ?>
+    
     <link rel="icon" type="image/png" href="/../assets/favicon.png">
 </head>
 

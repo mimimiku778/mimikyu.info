@@ -74,7 +74,8 @@ class BoardPageController extends AbstractPageController
          *      オブジェクトの場合は $v で渡されます。
          *      文字列はすべてサニタイズされます。key・プロパティ名の頭が "__" で始まる場合はサニタイズされません。
          */
-        View::render('header', ['title' => 'ひとこと掲示板']);
+
+        View::render('header', ['title' => 'ひとこと掲示板', '__css' => ['board']]);
         View::render('board/board', $val);
         View::render('footer');
         View::display();
