@@ -20,7 +20,6 @@
                     これで作ってます Github</a>
             </p>
         </header>
-
         <!-- 送信フォーム -->
         <form class="hitokoto-form" action="/board" method="POST">
             <label for="hitokoto">
@@ -31,28 +30,26 @@
             <!-- CSRFトークンをセットする -->
             <?php csrfField() ?>
             <button type="submit" disabled>送信</button>
+
             <?php if ($v->isPosted) : ?>
                 <sup>投稿しました！</sup>
             <?php endif ?>
         </form>
     </section>
-
-    <!-- select要素ページネーション -->
-    <?php if ($v->maxPage > 1) : ?>
-        <section>
-            <div class="pager-select" ontouchstart>
+    <section>
+        <!-- select要素ページネーション -->
+        <?php if ($v->maxPage > 1) : ?>
+            <nav class="pager-select" ontouchstart>
                 <form>
                     <select id="selectPager">
                         <?php echo $v->__select ?>
                     </select>
                     <label for="selectPager"><?php echo $v->__label ?></span></label>
                 </form>
-            </div>
-        </section>
-    <?php endif ?>
+            </nav>
+        <?php endif ?>
 
-    <!-- 投稿リスト -->
-    <section>
+        <!-- 投稿リスト -->
         <?php foreach ($v->posts as $post) : ?>
             <article>
                 <aside>
@@ -81,7 +78,6 @@
             <?php endif ?>
         </nav>
     <?php endif ?>
-
 </main>
 <script src="/js/functions.js"></script>
 <script>
